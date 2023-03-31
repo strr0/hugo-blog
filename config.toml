@@ -57,6 +57,7 @@ hasCJKLanguage = true
     noClasses = false
 
 [params]
-  # 数学公式
-  [params.pages.math]
-    enable = true
+  [params.page]
+    # 数学公式
+    [params.page.math]
+      enable = true
