@@ -26,7 +26,7 @@ $\frac{dy}{dx} = f(\frac{b_{1}y + c_{1})}{b_{2}y + c_{2}})$
 $\frac{dy}{dx} = f(\frac{a_{1}x + c_{1}}{a_{2}x + c_{2}})$  
 ④$a_{1}x + b_{1}y = k(a_{2}x + b_{2}y)$  
 令$u = a_{1}x + b_{1}y$，则$\frac{du}{dx} = a_{1} + b_{1}\frac{dy}{dx} = a_{1} + b_{1}f(\frac{u + c_{1}}{ku + c_{2}})$  
-⑤$\begin{vmatrix} a_{1} & b_{1} \\ a_{2} & b_{2} \end{vmatrix} \neq 0$  
-$\begin{cases} a_{1}x + b_{1}y + c_{1} = 0 \\ a_{2}x + b_{2}y + c_{2} = 0 \end{cases}$ 解得$\begin{cases} x = \alpha \\ y = \beta \end{cases}$  
-令$\begin{cases} X = x - \alpha \\ Y = y - \beta \end{cases}$有$\begin{cases} a_{1}X + b_{1}Y = 0 \\ a_{2}X + b_{2}Y = 0 \end{cases}$  
+⑤$\begin{vmatrix} a_{1} & b_{1} \\\\ a_{2} & b_{2} \end{vmatrix} \neq 0$  
+$\begin{cases} a_{1}x + b_{1}y + c_{1} = 0 \\\\ a_{2}x + b_{2}y + c_{2} = 0 \end{cases}$ 解得$\begin{cases} x = \alpha \\\\ y = \beta \end{cases}$  
+令$\begin{cases} X = x - \alpha \\\\ Y = y - \beta \end{cases}$有$\begin{cases} a_{1}X + b_{1}Y = 0 \\\\ a_{2}X + b_{2}Y = 0 \end{cases}$  
 $\frac{dY}{dX} = f(\frac{a_{1}X + b_{1}Y}{a_{2}X + b_{2}Y})$  
