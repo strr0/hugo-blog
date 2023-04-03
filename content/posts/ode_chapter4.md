@@ -35,3 +35,17 @@ $u(x, y) = \int_{x_{0}}^{x} M(x, y) dx + \int_{y_{0}}^{y} N(x, y) dy$
 4. $\frac{ydx - xdy}{xy} = d(\ln |\frac{x}{y}|)$  
 5. $\frac{ydx - xdy}{x^2 + y^2} = d(arccot \frac{y}{x})$  
 6. $\frac{ydx - xdy}{x^2 - y^2} = \frac{1}{2}d(\ln |\frac{x-y}{x+y}|)$  
+
+积分因子  
+对非恰当微分方程$M(x, y)dx + N(x, y)dy = 0$两边同时乘以$\mu$使得原方程转化为恰当微分方程$\mu M(x, y)dx + \mu N(x, y)dy = 0$  
+$\frac{\delta \mu M(x, y)}{\delta y} = \frac{\delta \mu N(x, y)}{\delta x}$  
+$M(x, y)\frac{\delta \mu}{\delta y} + \mu\frac{\delta M(x, y)}{\delta y} = N(x, y)\frac{\delta \mu}{\delta x} + \mu\frac{\delta N(x, y)}{\delta x}$  
+$N(x, y)\frac{\delta \mu}{\delta x} - M(x, y)\frac{\delta \mu}{\delta y} = \mu(\frac{\delta M(x, y)}{\delta y} - \frac{\delta N(x, y)}{\delta x})$  
+①$\mu$与y无关  
+$N(x, y)\frac{d\mu}{dx} = \mu(\frac{\delta M(x, y)}{\delta y} - \frac{\delta N(x, y)}{\delta x})$  
+$\frac{1}{\mu}d\mu = \frac{\frac{\delta M(x, y)}{\delta y} - \frac{\delta N(x, y)}{\delta x}}{N(x, y)}dx$  
+$\mu = Ce^{\int \frac{\frac{\delta M(x, y)}{\delta y} - \frac{\delta N(x, y)}{\delta x}}{N(x, y)}dx}$  
+②$\mu$与x无关  
+$-M(x, y)\frac{d\mu}{dy} = \mu(\frac{\delta M(x, y)}{\delta y} - \frac{\delta N(x, y)}{\delta x})$  
+$\frac{1}{\mu}d\mu = -\frac{\frac{\delta M(x, y)}{\delta y} - \frac{\delta N(x, y)}{\delta x}}{M(x, y)}dy$  
+$\mu = Ce^{-\int \frac{\frac{\delta M(x, y)}{\delta y} - \frac{\delta N(x, y)}{\delta x}}{M(x, y)}dy}$  
