@@ -56,5 +56,5 @@ docker run -p 8080:8080 --name {容器名} -d {镜像名:版本号}
 ```
 停止容器
 ```
-docker stop {镜像名:版本号}
+docker stop {容器名}
 ```
