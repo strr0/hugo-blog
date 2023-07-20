@@ -36,8 +36,15 @@ server {
   listen 8080;
   server_name localhost;
   location / {
-    root /home/xin/web/dist;
+    root /home/xxxx;
     index index.html;
+  }
+  location /api/ {
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Server $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $host:$server_port;
+    proxy_pass http://xxxxxx:xxxx/;
   }
 }
 ```
