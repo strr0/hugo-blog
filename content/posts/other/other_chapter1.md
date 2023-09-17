@@ -229,3 +229,20 @@ SDL_IM_MODULE=fcitx
 GLFW_IM_MODULE=ibus
 ```
 配置输入法，配置文件位于 ~/.config/fcitx5，可使用 GUI 配置（需安装 fcitx5-configtool）  
+#### 5.4 安装 Aur 助手（yay）
+安装必要依赖
+```
+pacman -S --needed git base-devel
+```
+go 语言换源
+```
+echo "export GO111MODULE=on" >> ~/.profile
+echo "export GOPROXY=https://goproxy.cn" >> ~/.profile
+source ~/.profile
+```
+安装 yay
+```
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+```

@@ -1,8 +1,41 @@
 ---
-title: "Dcoker ss"
+title: "Lightweight proxy on Linux"
 date: 2023-09-15T17:00:00+08:00
 draft: false
 ---
+
+### Usage
+
+Install shadowocks
+
+```
+yay -S shadowsocks-rust
+```
+
+Start local client with configuration file
+
+```
+# Read local client configuration from file
+sslocal -c /path/to/shadowsocks.json
+```
+
+#### Socks5 Local client
+
+```
+# Pass all parameters via command line
+sslocal -b "127.0.0.1:1080" -s "[::1]:8388" -m "aes-256-gcm" -k "hello-kitty" --plugin "v2ray-plugin" --plugin-opts "server;tls;host=github.com"
+
+# Pass server with SIP002 URL
+sslocal -b "127.0.0.1:1080" --server-url "ss://YWVzLTI1Ni1nY206cGFzc3dvcmQ@127.0.0.1:8388/?plugin=v2ray-plugin%3Bserver%3Btls%3Bhost%3Dgithub.com"
+```
+
+#### HTTP Local client
+
+```
+sslocal -b "127.0.0.1:3128" --protocol http -s "[::1]:8388" -m "aes-256-gcm" -k "hello-kitty"
+```
+
+All parameters are the same as Socks5 client, except `--protocol http`.
 
 ### **Docker**
 
@@ -20,7 +53,6 @@ docker pull ghcr.io/shadowsocks/ssserver-rust:latest
 ```
 
 
-
 #### Build on the local machine（Optional）
 
 If you want to build the Docker image yourself, you need to use the [BuildX](https://docs.docker.com/buildx/working-with-buildx/).
@@ -29,7 +61,6 @@ If you want to build the Docker image yourself, you need to use the [BuildX](htt
 docker buildx build -t shadowsocks/ssserver-rust:latest -t shadowsocks/ssserver-rust:v1.15.2 --target ssserver .
 docker buildx build -t shadowsocks/sslocal-rust:latest -t shadowsocks/sslocal-rust:v1.15.2 --target sslocal .
 ```
-
 
 
 #### Run the container
@@ -64,4 +95,27 @@ Create a ShadowSocks' configuration file. Example
     "local_address": "127.0.0.1",
     "local_port": 1080
 }
+```
+
+### Browser Setting
+
+Install privoxy
+
+```
+pacman -S privoxy
+```
+
+add privoxy conifg
+
+```
+/etc/privoxy/config
+forward-socks5 / 127.0.0.1:1080 .
+listen-address  127.0.0.1:8118
+```
+
+start privoxy and browser
+
+```
+systemctl start privoxy
+chromium --proxy-server="http://127.0.0.1:8118"
 ```
