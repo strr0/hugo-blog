@@ -1,6 +1,6 @@
 ---
 title: "Spring整合redis"
-date: 2023-09-41T23:00:00+08:00
+date: 2023-09-14T23:00:00+08:00
 tags: ["java"]
 draft: false
 ---
@@ -48,16 +48,31 @@ spring:
         max-wait: -1ms
         min-idle: 0
 ```
+RedisTemplate注入BookService
+```
+@Service
+public class BookService {
+    @Resource
+    private RedisTemplate<String, Book> redisTemplate;
+    // TODO
+}
+```
 #### RedisTemplate操作redis
 设置key value
 ```
-redisTemplate.opsForValue().set(key, book);
+public void setBook(String key, Book book) {
+    redisTemplate.opsForValue().set(key, book);
+}
 ```
 获取value
 ```
-redisTemplate.opsForValue().get(key);
+public Book getBook(String key) {
+    return redisTemplate.opsForValue().get(key);
+}
 ```
 删除key
 ```
-redisTemplate.delete(key);
+public Boolean removeBook(String key) {
+    return redisTemplate.delete(key);
+}
 ```
