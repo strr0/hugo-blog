@@ -58,3 +58,8 @@ docker run -p 8080:8080 --name {容器名} -d {镜像名:版本号}
 ```
 docker stop {容器名}
 ```
+### 3 普通用户 permission denied 问题
+```
+sudo gpasswd -a ${USER} docker   # 将当前用户添加到docker组
+newgrp docker                    # 更新用户组
+```
