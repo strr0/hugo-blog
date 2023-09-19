@@ -9,13 +9,35 @@ draft: false
 消息队列
 
 ### Kafka安装
-拉取镜像
+#### 拉取镜像
 ```
-docker pull spotify/kafka
+docker pull bitnami/zookeeper
+docker pull bitnami/kafka
 ```
-运行容器
+#### 运行容器
+创建网络
 ```
-docker run -d --name kafka-server -p 2181:2181 -p 9092:9092 -e ADVERTISED_HOST=127.0.0.1 -e ADVERTISED_PORT=9092 spotify/kafka
+docker network create app-tier --driver bridge
+```
+运行zookeeper容器
+```
+docker run -d --name zookeeper-server \
+    -p 2181:2181 \
+    --network app-tier \
+    -e ALLOW_ANONYMOUS_LOGIN=yes \
+    bitnami/zookeeper:latest
+```
+运行kafka容器
+```
+docker run -d --name kafka-server \
+    -p 9092:9092 \
+    --network app-tier \
+    -e KAFKA_BROKER_ID=1 \
+    -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092 \
+    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://{ip}:9092 \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-server:2181 \
+    -e ALLOW_PLAINTEXT_LISTENER=yes \
+    bitnami/kafka:latest
 ```
 
 ### Spring整合
@@ -83,6 +105,20 @@ public class KafkaConsumerService {
     @KafkaListener(id = "fooGroup", topics = "topic1")
     public void listen(Foo2 foo) {
         // TODO
+    }
+}
+```
+#### 测试
+```
+@SpringBootTest
+class ApplicationTests {
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
+
+    @Test
+    void sendMessageTest() {
+        String what = "hello world!";
+        kafkaProducerService.sendFoo(what);
     }
 }
 ```
