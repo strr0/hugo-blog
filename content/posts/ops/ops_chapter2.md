@@ -8,7 +8,8 @@ draft: false
 容器技术
 
 ### 1 Docker
-#### 1.1 安装参考[官方文档](https://docs.docker.com/engine/install/ubuntu/)
+#### 1.1 安装  
+可参考[官方文档](https://docs.docker.com/engine/install/ubuntu/)  
 卸载旧版本
 ```bash
 sudo apt-get remove docker docker-engine docker.io containerd runc
