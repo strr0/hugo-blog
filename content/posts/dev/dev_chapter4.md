@@ -46,8 +46,8 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: guest
-    password: guest
+    username: user
+    password: password
 ```
 #### 直连模式（Direct）
 队列及交换机配置
