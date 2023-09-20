@@ -3,7 +3,7 @@ title: "隐式微分方程"
 date: 2023-04-03T16:00:00+08:00
 tags: ["differential"]
 math: true
-draft: false
+draft: true
 ---
 
 诸如$F(x, y, y') = 0$的微分方程  
