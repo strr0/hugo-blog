@@ -1,6 +1,7 @@
 ---
 title: "Linux环境下Nginx的安装与使用"
 date: 2023-07-18T15:00:00+08:00
+tags: ["linux"]
 draft: false
 ---
 

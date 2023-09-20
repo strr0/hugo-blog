@@ -1,7 +1,7 @@
 ---
 title: "恰当微分方程"
 date: 2023-03-30T19:00:00+08:00
-tags: ["differential"]
+categories: ["differential"]
 math: true
 draft: true
 ---

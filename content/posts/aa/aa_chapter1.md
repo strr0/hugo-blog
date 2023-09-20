@@ -1,7 +1,7 @@
 ---
 title: "二阶行列式"
 date: 2023-03-31T17:30:00+08:00
-tags: ["algebra"]
+categories: ["algebra"]
 math: true
 draft: false
 ---

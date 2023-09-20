@@ -1,6 +1,7 @@
 ---
 title: "Linux环境下MongoDB的安装与使用"
 date: 2023-04-26T15:00:00+08:00
+tags: ["linux"]
 draft: false
 ---
 

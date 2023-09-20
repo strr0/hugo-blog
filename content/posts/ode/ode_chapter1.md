@@ -1,7 +1,7 @@
 ---
 title: "一阶微分方程的初等解法"
 date: 2023-03-28T20:00:00+08:00
-tags: ["differential"]
+categories: ["differential"]
 math: true
 draft: false
 ---

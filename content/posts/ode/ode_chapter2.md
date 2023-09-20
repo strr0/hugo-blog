@@ -1,7 +1,7 @@
 ---
 title: "变量分离和变量变换"
 date: 2023-03-29T20:00:00+08:00
-tags: ["differential"]
+categories: ["differential"]
 math: true
 draft: true
 ---
