@@ -4,9 +4,10 @@ date: 2023-09-12T10:00:00+08:00
 draft: false
 ---
 
-### 介绍
+## 介绍
 [Arch is the best](https://wiki.archlinux.org/title/Arch_is_the_best)
 
+## 安装
 ### 1 前置准备
 #### 1.1 获取安装镜像  
 从 [mirrors](https://mirrors.tuna.tsinghua.edu.cn/archlinux/iso/latest/) 下载 ArchLinux 镜像
@@ -53,9 +54,8 @@ fdisk -l
 ```
 cfdisk /dev/the_disk_to_be_partitioned（要被分区的磁盘）
 ```
-创建 root 分区（100G 或自定义大小）和 EFI 分区（300M）即可，如果安装双系统可以不建 EFI 分区，使用已有的 EFI 分区  
-交换分区使用下文中的交换文件代替  
-或者参考 [Example layouts](https://wiki.archlinux.org/title/Partitioning#Example_layouts) 中的分区方案
+创建 root 分区（100G 或自定义大小）和 EFI 分区（300M）即可，如果安装双系统可以不建 EFI 分区，使用已有的 EFI 分区，其他分区可参考 [Example layouts](https://wiki.archlinux.org/title/Partitioning#Example_layouts) 中的分区方案
+> 本文不使用交换分区，使用[交换文件](#33-创建交换文件)代替
 #### 1.7 格式化分区  
 格式化 root 分区为 Ext4
 ```
@@ -149,6 +149,10 @@ LANG=en_US.UTF-8
 /etc/hostname
 myhostname（主机名）
 ```
+安装网络程序
+```
+pacman -S iwd dhcpcd networkmanager
+```
 #### 3.7 使用 passwd 设置 root 密码
 ```
 passwd
@@ -175,7 +179,7 @@ timeout  4
 console-mode  max
 editor  no
 ```
-至此系统安装完毕，在重启计算机前可穿插[安装后的工作](#5-安装后的工作)
+至此系统安装完毕，在重启计算机前可选择[安装后的工作](#安装后的工作)，或后续执行
 
 ### 4 重新启动计算机
 #### 4.1 退出 chroot 环境  
@@ -190,11 +194,9 @@ umount -R /mnt
 ```
 shutdown -h now
 ```
-#### 4.4 手动启动  
-linux 引导默认在 windows 引导之后，需要手动在 bios 中切换引导启动顺序
 
-### 5 安装后的工作
-#### 5.1 添加用户  
+## 安装后的工作
+### 1 添加用户  
 安装 sudo（或者 base-devel ）
 ```
 pacman -S sudo
@@ -207,21 +209,38 @@ useradd -m -G wheel username（用户名）
 ```
 passwd username（用户名）
 ```
-编辑 /etc/sudoers，然后取消掉 %wheel ALL=(ALL) ALL 前面的注释  
-#### 5.2 安装桌面环境  
-安装 gnome 桌面及网络管理
+编辑 /etc/sudoers，然后取消掉 %wheel ALL=(ALL:ALL) ALL 前面的注释  
+
+### 2 安装 Aur 助手（yay）
+安装必要依赖
 ```
-pacman -S gnome networkmanager
+pacman -S git base-devel（已安装则忽略）
+```
+安装 yay
+```
+git clone https://aur.archlinux.org/yay-bin.git
+cd yay-bin
+makepkg -si
+```
+
+### 3 安装桌面环境  
+#### 3.1 Gnome 桌面（推荐）
+安装 gnome 桌面
+```
+pacman -S gnome
 ```
 启用显示管理器
 ```
 systemctl enable gdm
 ```
-#### 5.4 双系统时间不一致问题  
+#### 3.2 Hyprland 桌面  
+安装桌面及必要组件
 ```
-timedate set-local-rtc 1
+yay -S hyprland kitty dolphin wofi
 ```
-#### 5.3 中文环境及输入法  
+使用命令 `Hyprland` 或显示管理器启动
+
+### 4 中文环境及输入法  
 安装中文字体，推荐 noto-fonts-cjk
 ```
 pacman -S noto-fonts-cjk
@@ -239,24 +258,8 @@ SDL_IM_MODULE=fcitx
 GLFW_IM_MODULE=ibus
 ```
 配置输入法，配置文件位于 ~/.config/fcitx5，可使用 GUI 配置（需安装 fcitx5-configtool）  
-#### 5.4 安装 Aur 助手（yay）
-安装必要依赖
-```
-pacman -S go git base-devel（已安装则忽略）
-```
-go 语言换源
-```
-echo "export GO111MODULE=on" >> ~/.profile
-echo "export GOPROXY=https://goproxy.cn" >> ~/.profile
-source ~/.profile
-```
-安装 yay
-```
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-```
-#### 5.5 其他  
+
+### 5 其他  
 edge浏览器
 ```
 yay -S microsoft-edge-stable-bin
@@ -264,4 +267,19 @@ yay -S microsoft-edge-stable-bin
 vscode
 ```
 yay -S visual-studio-code-bin
+```
+
+## 问题与解决  
+### 1 引导问题  
+linux 引导默认在 windows 引导之后，需要手动在 bios 中切换引导启动顺序  
+
+### 2 时间设置问题  
+双系统时间不一致问题  
+```
+timedate set-local-rtc 1
+```
+### 3 iwd 联网失败问题（无 networkmanager ）
+尝试如下命令
+```
+systemctl start systemd-resolved
 ```
