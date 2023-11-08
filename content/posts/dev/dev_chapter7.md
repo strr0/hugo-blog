@@ -69,3 +69,18 @@ public class ApplicationTests {
     }
 }
 ```
+
+## 2 其他问题
+
+### 2.1 异步执行
+事件驱动默认是同步的，事件发布者会阻塞等待事件处理完成，可通过 Async 注解设置为异步执行
+```
+@Component
+public class MyListener {
+    @Async
+    @EventListener
+    public void onReceiveEvent(MyEvent event) {
+        // TODO
+    }
+}
+```
