@@ -1,5 +1,5 @@
 ---
-title: "ArchLinux下Hyprland配置"
+title: "ArchLinux 下 Hyprland 配置"
 date: 2023-10-19T10:00:00+08:00
 draft: false
 ---

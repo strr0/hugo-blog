@@ -1,5 +1,5 @@
 ---
-title: "Spring整合mongodb"
+title: "Spring 整合 Mongodb"
 date: 2023-09-20T10:00:00+08:00
 tags: ["java"]
 draft: false
@@ -8,7 +8,7 @@ draft: false
 ### 介绍
 非关系型数据库
 
-### MongoDb安装
+### Mongodb 安装
 拉取镜像
 ```
 docker pull mongo
@@ -30,8 +30,8 @@ docker exec -it mongodb-server mongosh admin
 > db.createUser({ user: 'user', pwd: 'password', roles: [ { role: "dbOwner", db: "testdb" } ] });
 ```
 
-### Spring整合
-#### Spring配置
+### Spring 整合
+#### Spring 配置
 引入依赖
 ```
 <dependency>
@@ -46,7 +46,7 @@ docker exec -it mongodb-server mongosh admin
     <version>${mongo-driver.version}</version>
 </dependency>
 ```
-application配置
+application 配置
 ```
 spring:
   data:
@@ -58,7 +58,7 @@ spring:
       username: user
       password: password
 ```
-repository配置
+repository 配置
 ```
 public interface BookRepository extends MongoRepository<Book, Integer> {
 }

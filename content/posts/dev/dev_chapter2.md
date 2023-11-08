@@ -1,5 +1,5 @@
 ---
-title: "Spring整合redis"
+title: "Spring 整合 Redis"
 date: 2023-09-14T23:00:00+08:00
 tags: ["java"]
 draft: false
@@ -8,7 +8,7 @@ draft: false
 ### 介绍
 缓存技术
 
-### Redis安装
+### Redis 安装
 拉取镜像
 ```
 docker pull redis
@@ -18,8 +18,8 @@ docker pull redis
 docker run -d --name redis-server -p 6379:6379 redis --requirepass password（密码）
 ```
 
-### Spring整合
-#### Spring配置
+### Spring 整合
+#### Spring 配置
 引入依赖
 ```
 <dependency>
@@ -33,7 +33,7 @@ docker run -d --name redis-server -p 6379:6379 redis --requirepass password（�
     <artifactId>jedis</artifactId>
 </dependency>
 ```
-application配置
+application 配置
 ```
 spring:
   redis:
@@ -48,7 +48,7 @@ spring:
         max-wait: -1ms
         min-idle: 0
 ```
-RedisTemplate注入BookService
+RedisTemplate 注入 BookService
 ```
 @Service
 public class BookService {
@@ -57,7 +57,7 @@ public class BookService {
     // TODO
 }
 ```
-#### RedisTemplate操作redis
+#### RedisTemplate 操作 redis
 设置key value
 ```
 public void setBook(String key, Book book) {

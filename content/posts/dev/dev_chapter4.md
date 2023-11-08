@@ -1,5 +1,5 @@
 ---
-title: "Spring整合rabbitmq"
+title: "Spring 整合 Rabbitmq"
 date: 2023-09-19T15:00:00+08:00
 tags: ["java"]
 draft: false
@@ -8,7 +8,7 @@ draft: false
 ### 介绍
 消息队列
 
-### RabbitMq安装
+### RabbitMq 安装
 拉取镜像
 ```
 docker pull rabbitmq:3-management
@@ -25,8 +25,8 @@ docker run -d --hostname my-rabbit \
 ```
 [管理端](http://localhost:15672)（账号密码 user/password）
 
-### Spring整合
-#### Spring配置
+### Spring 整合
+#### Spring 配置
 引入依赖
 ```
 <dependency>
@@ -40,7 +40,7 @@ docker run -d --hostname my-rabbit \
     <artifactId>spring-messaging</artifactId>
 </dependency>
 ```
-application配置
+application 配置
 ```
 spring:
   rabbitmq:

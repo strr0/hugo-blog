@@ -1,5 +1,5 @@
 ---
-title: "ArchLinux安装教程（双系统）"
+title: "ArchLinux 安装教程（双系统）"
 date: 2023-09-12T10:00:00+08:00
 draft: false
 ---
@@ -269,17 +269,27 @@ vscode
 yay -S visual-studio-code-bin
 ```
 
-## 问题与解决  
+## 问题与解决
 ### 1 引导问题  
 linux 引导默认在 windows 引导之后，需要手动在 bios 中切换引导启动顺序  
 
 ### 2 时间设置问题  
 双系统时间不一致问题  
+linux 下可执行如下命令修改
 ```
 timedate set-local-rtc 1
 ```
-### 3 iwd 联网失败问题（无 networkmanager ）
-尝试如下命令
+> 或者修改 windows 注册表，将 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation\RealTimeIsUniversal 键值设置为 1
+
+### 3 iwd 联网失败问题  
+修改 main.conf
+```
+/etc/iwd/main.conf
+
+[General]
+EnableNetworkConfiguration=true
+```
+启动 systemd-resolved 服务
 ```
 systemctl start systemd-resolved
 ```

@@ -1,11 +1,11 @@
 ---
-title: "基于OpenCore引导的黑苹果安装"
+title: "基于 OpenCore 引导的黑苹果安装"
 date: 2023-10-01T10:00:00+08:00
 draft: false
 ---
 
 ## 介绍  
-本教程基于[OpenCore官方教程](https://dortania.github.io/OpenCore-Install-Guide)，开始之前需要[确认你的硬件是否支持](https://dortania.github.io/OpenCore-Install-Guide/macos-limits.html)，其次确认你是否真的需要黑苹果，最后确保你有足够的时间和耐心。
+本教程基于 [OpenCore 官方教程](https://dortania.github.io/OpenCore-Install-Guide)，开始之前需要[确认你的硬件是否支持](https://dortania.github.io/OpenCore-Install-Guide/macos-limits.html)，其次确认你是否真的需要黑苹果，最后确保你有足够的时间和耐心。
 
 ## 1 安装  
 ### 1.1 准备  

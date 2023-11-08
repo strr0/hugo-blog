@@ -4,22 +4,27 @@ date: 2023-09-15T17:00:00+08:00
 draft: false
 ---
 
-### Usage
+## Overview
+proxy
 
-Install shadowocks
+## 1 Install
+
+### 1.1 Use aur packges
+
+#### 1.1.1 Install shadowocks
 
 ```
 yay -S shadowsocks-rust
 ```
 
-Start local client with configuration file
+#### 1.1.2 Start local client with configuration file
 
 ```
 # Read local client configuration from file
 sslocal -c /path/to/shadowsocks.json
 ```
 
-#### Socks5 Local client
+#### 1.1.3 Socks5 Local client
 
 ```
 # Pass all parameters via command line
@@ -29,7 +34,7 @@ sslocal -b "127.0.0.1:1080" -s "[::1]:8388" -m "aes-256-gcm" -k "hello-kitty" --
 sslocal -b "127.0.0.1:1080" --server-url "ss://YWVzLTI1Ni1nY206cGFzc3dvcmQ@127.0.0.1:8388/?plugin=v2ray-plugin%3Bserver%3Btls%3Bhost%3Dgithub.com"
 ```
 
-#### HTTP Local client
+#### 1.1.4 HTTP Local client
 
 ```
 sslocal -b "127.0.0.1:3128" --protocol http -s "[::1]:8388" -m "aes-256-gcm" -k "hello-kitty"
@@ -37,13 +42,13 @@ sslocal -b "127.0.0.1:3128" --protocol http -s "[::1]:8388" -m "aes-256-gcm" -k 
 
 All parameters are the same as Socks5 client, except `--protocol http`.
 
-### **Docker**
+### 1.2 Use docker
 
 This project provided Docker images for the `linux/i386` and `linux/amd64` and `linux/arm64/v8` architectures.
 
 > ⚠️ **Docker containers do not have access to IPv6 by default**: Make sure to disable IPv6 Route in the client or [enable IPv6 access to docker containers](https://docs.docker.com/config/daemon/ipv6/#use-ipv6-for-the-default-bridge-network).
 
-#### Pull from GitHub Container Registry
+#### 1.2.1 Pull from GitHub Container Registry
 
 Docker will pull the image of the appropriate architecture from our [GitHub Packages](https://github.com/orgs/shadowsocks/packages?repo_name=shadowsocks-rust).
 
@@ -53,7 +58,7 @@ docker pull ghcr.io/shadowsocks/ssserver-rust:latest
 ```
 
 
-#### Build on the local machine（Optional）
+#### 1.2.2 Build on the local machine（Optional）
 
 If you want to build the Docker image yourself, you need to use the [BuildX](https://docs.docker.com/buildx/working-with-buildx/).
 
@@ -63,7 +68,7 @@ docker buildx build -t shadowsocks/sslocal-rust:latest -t shadowsocks/sslocal-ru
 ```
 
 
-#### Run the container
+#### 1.2.3 Run the container
 
 You need to mount the configuration file into the container and create an external port map for the container to connect to it.
 
@@ -97,7 +102,31 @@ Create a ShadowSocks' configuration file. Example
 }
 ```
 
-### Browser Setting
+## 2 Usage
+
+### 2.1 Proxychains
+
+Install proxychains
+
+```
+pacman -S proxychains
+```
+
+Add proxychains config
+
+```
+/etc/proxychains.conf
+
+socks5 127.0.0.1 1080
+```
+
+Using in terminal
+
+```
+proxychains ping -c4 www.example.com
+```
+
+### 2.2 Privoxy
 
 Install privoxy
 
@@ -105,15 +134,16 @@ Install privoxy
 pacman -S privoxy
 ```
 
-add privoxy conifg
+Add privoxy config
 
 ```
 /etc/privoxy/config
+
 forward-socks5 / 127.0.0.1:1080 .
 listen-address  127.0.0.1:8118
 ```
 
-start privoxy and browser
+Start browser with privoxy
 
 ```
 systemctl start privoxy

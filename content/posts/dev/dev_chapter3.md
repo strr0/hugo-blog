@@ -1,5 +1,5 @@
 ---
-title: "Spring整合kafka"
+title: "Spring 整合 Kafka"
 date: 2023-09-17T23:00:00+08:00
 tags: ["java"]
 draft: false
@@ -8,7 +8,7 @@ draft: false
 ### 介绍
 消息队列
 
-### Kafka安装
+### Kafka 安装
 #### 拉取镜像
 ```
 docker pull bitnami/zookeeper
@@ -19,7 +19,7 @@ docker pull bitnami/kafka
 ```
 docker network create app-tier --driver bridge
 ```
-运行zookeeper容器
+运行 zookeeper 容器
 ```
 docker run -d --name zookeeper-server \
     -p 2181:2181 \
@@ -27,7 +27,7 @@ docker run -d --name zookeeper-server \
     -e ALLOW_ANONYMOUS_LOGIN=yes \
     bitnami/zookeeper:latest
 ```
-运行kafka容器
+运行 kafka 容器
 ```
 docker run -d --name kafka-server \
     -p 9092:9092 \
@@ -40,8 +40,8 @@ docker run -d --name kafka-server \
     bitnami/kafka:latest
 ```
 
-### Spring整合
-#### Spring配置
+### Spring 整合
+#### Spring 配置
 引入依赖
 ```
 <dependency>
@@ -50,14 +50,14 @@ docker run -d --name kafka-server \
     <version>${spring-boot.version}</version>
 </dependency>
 
-<!-- kafka序列化 -->
+<!-- kafka 序列化 -->
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
     <version>${jackson.version}</version>
 </dependency>
 ```
-application配置
+application 配置
 ```
 spring:
   kafka:
@@ -67,7 +67,7 @@ spring:
     consumer:
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
 ```
-Topic和消息转换器配置
+Topic 和消息转换器配置
 ```
 @Configuration
 @EnableKafka

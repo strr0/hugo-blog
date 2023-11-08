@@ -1,5 +1,5 @@
 ---
-title: "Linux环境下ByConity的安装与使用"
+title: "Linux 环境下 ByConity 的安装与使用"
 date: 2023-10-11T10:00:00+08:00
 tags: ["linux"]
 draft: false
