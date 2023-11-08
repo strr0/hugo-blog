@@ -5,16 +5,16 @@ tags: ["java"]
 draft: false
 ---
 
-### 介绍
+## 介绍
 消息队列
 
-### Kafka 安装
-#### 拉取镜像
+## 环境配置
+### 拉取镜像
 ```
 docker pull bitnami/zookeeper
 docker pull bitnami/kafka
 ```
-#### 运行容器
+### 运行容器
 创建网络
 ```
 docker network create app-tier --driver bridge
@@ -40,8 +40,8 @@ docker run -d --name kafka-server \
     bitnami/kafka:latest
 ```
 
-### Spring 整合
-#### Spring 配置
+## 示例
+### Spring 配置
 引入依赖
 ```
 <dependency>
@@ -108,7 +108,7 @@ public class KafkaConsumerService {
     }
 }
 ```
-#### 测试
+### 测试
 ```
 @SpringBootTest
 class ApplicationTests {

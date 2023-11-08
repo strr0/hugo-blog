@@ -5,10 +5,10 @@ tags: ["java"]
 draft: false
 ---
 
-### 介绍
+## 介绍
 消息队列
 
-### RabbitMq 安装
+## 环境配置
 拉取镜像
 ```
 docker pull rabbitmq:3-management
@@ -25,8 +25,8 @@ docker run -d --hostname my-rabbit \
 ```
 [管理端](http://localhost:15672)（账号密码 user/password）
 
-### Spring 整合
-#### Spring 配置
+## 示例
+### Spring 配置
 引入依赖
 ```
 <dependency>
@@ -49,7 +49,7 @@ spring:
     username: user
     password: password
 ```
-#### 直连模式（Direct）
+### 直连模式（Direct）
 队列及交换机配置
 ```
 @Configuration
@@ -107,7 +107,7 @@ class ApplicationTests {
     }
 }
 ```
-#### 广播模式（Fanout）
+### 广播模式（Fanout）
 队列及交换机配置
 ```
 @Configuration
@@ -180,7 +180,7 @@ class ApplicationTests {
     }
 }
 ```
-#### Topic模式（根据路由key模糊匹配）
+### Topic模式（根据路由key模糊匹配）
 队列及交换机配置
 ```
 @Configuration
@@ -273,7 +273,7 @@ class ApplicationTests {
     }
 }
 ```
-#### Header模式（根据header匹配）
+### Header模式（根据header匹配）
 队列及交换机配置
 ```
 @Configuration

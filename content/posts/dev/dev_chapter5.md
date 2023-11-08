@@ -5,10 +5,10 @@ tags: ["java"]
 draft: false
 ---
 
-### 介绍
+## 介绍
 非关系型数据库
 
-### Mongodb 安装
+## 环境配置
 拉取镜像
 ```
 docker pull mongo
@@ -30,8 +30,8 @@ docker exec -it mongodb-server mongosh admin
 > db.createUser({ user: 'user', pwd: 'password', roles: [ { role: "dbOwner", db: "testdb" } ] });
 ```
 
-### Spring 整合
-#### Spring 配置
+## 示例
+### Spring 配置
 引入依赖
 ```
 <dependency>
@@ -63,7 +63,7 @@ repository 配置
 public interface BookRepository extends MongoRepository<Book, Integer> {
 }
 ```
-#### 测试
+### 测试
 ```
 @SpringBootTest
 class ApplicationTests {
