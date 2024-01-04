@@ -20,7 +20,7 @@ docker run -d --name mongodb-server -p 27017:27017 mongo --auth
 设置初始化用户
 ```
 docker exec -it mongodb-server mongosh admin
-> db.createUser({ user: 'admin', pwd: 'password', roles: [ { role: "root", db: "admin" } ] });
+> db.createUser({ user: 'admin', pwd: 'password', roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] });
 ```
 创建数据库及赋予权限
 ```
