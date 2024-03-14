@@ -1,7 +1,7 @@
 ---
 title: "MySql 树形查询"
 date: 2023-11-29T10:00:00+08:00
-tags: ["java"]
+tags: ["mysql"]
 draft: false
 ---
 

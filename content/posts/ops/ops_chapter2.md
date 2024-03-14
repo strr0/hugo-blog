@@ -1,7 +1,7 @@
 ---
 title: "Linux 环境下 Docker 的安装与使用"
 date: 2023-04-06T21:00:00+08:00
-tags: ["linux"]
+tags: ["linux", "mysql"]
 draft: false
 ---
 
