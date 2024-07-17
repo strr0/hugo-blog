@@ -103,8 +103,8 @@ Manage Jenkins > Credentials
 BUILD_ID=springboot-demo
 
 JVM_OPTION="-Xms256m -Xmx1024m"
-FILE_PATH="/home/centos/workspace/springboot-demo.jar"
-LOG_PATH="/home/centos/workspace/springboot-demo.out"
+FILE_PATH="/home/centos/workspace/springboot-demo/springboot-demo.jar"
+LOG_PATH="/home/centos/workspace/springboot-demo/springboot-demo.out"
 PROFILES="prod"
 
 PID=`netstat -apn | grep 8081 | awk '{split($7,arr,"/");print arr[1];}' | grep -v - | uniq`
@@ -118,6 +118,29 @@ rm -rf $FILE_PATH
 cp /home/centos/.jenkins/workspace/springboot-demo/target/springboot-demo.jar $FILE_PATH
 
 nohup java -jar -Dspring.profiles.active=$PROFILES $JVM_OPTION $FILE_PATH >> $LOG_PATH 2>&1 &
+```
+
+#### 2.2.5 配置后置脚本（docker）
+在 Post Steps 底下点击 Add post-build step 选择 Execute shell  
+```
+#!/bin/bash
+BUILD_ID=springboot-demo
+
+CID=`docker ps -a | grep springboot-demo | awk '{print $1}'`
+if [ ! -z "$CID" ]
+then
+   docker stop $CID
+   docker rm $CID
+fi
+IID=`docker images | grep springboot-demo | awk '{print $3}'`
+if [ ! -z "$IID" ]
+then
+   docker rmi $IID
+fi
+
+docker build -t "springboot-demo:1.0" springboot-demo
+
+docker run -d --name springboot-demo -p 8081:8080 -v /home/centos/workspace/springboot-demo/config:/config springboot-demo:1.0
 ```
 
 ### 2.3 问题与修复  
