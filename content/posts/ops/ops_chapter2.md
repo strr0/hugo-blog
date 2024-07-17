@@ -53,6 +53,21 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
+### 2.3 配置国内镜像源
+修改 /etc/docker/daemon.json
+```
+{
+  "registry-mirrors": [
+    "https://docker.m.daocloud.io",
+    "https://docker.1panel.live"
+  ]
+}
+```
+重启 docker
+```
+service docker restart
+```
+
 ## 3 基础操作
 ### 3.1 Docker
 启动 docker
