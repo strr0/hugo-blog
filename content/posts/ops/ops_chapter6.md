@@ -60,3 +60,6 @@ server {
 ### 停止
 /usr/local/nginx/sbin/nginx -s stop
 ```
+
+## 3 问题与修复  
+请求转发配置：proxy_pass 地址后缀的 / 会将拦截的 location 替换成转发后的地址，没有后缀则会将拦截的 location 补充到转发地址之后。
