@@ -80,19 +80,23 @@ service docker stop
 ```
 拉取镜像
 ```
-docker pull {镜像名:版本号}
+docker pull myimage:version
 ```
 运行容器（-p 端口映射 --name 容器名 -d 后台运行）
 ```
-docker run -p 8080:8080 --name {容器名} -d {镜像名:版本号}
+docker run -p 8080:8080 --name mycontainer -d myimage:version
 ```
 停止容器
 ```
-docker stop {容器名}
+docker stop mycontainer
 ```
 进入容器
 ```
-docker exec -it {容器名} /bin/bash
+docker exec -it mycontainer /bin/bash
+```
+复制容器文件
+```
+docker cp mycontainer:/path/in/container /path/on/host
 ```
 磁盘空间查看
 ```
@@ -110,14 +114,14 @@ systemctl start docker
 ```
 判断容器是否存在
 ```
-if docker ps -a | grep -q {容器名|镜像名}; then
-  echo "exists."
+if docker ps -a | grep -q mycontainer; then
+  ...
 fi
 ```
 判断镜像是否存在
 ```
-if docker images | grep -q {镜像名}; then
-  echo "exists."
+if docker images | grep -q myimage; then
+  ...
 fi
 ```
 

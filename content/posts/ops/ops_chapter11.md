@@ -6,7 +6,7 @@ draft: false
 ---
 
 ## 介绍  
-Jenkins是一个开源软件项目，是基于Java开发的一种持续集成工具，用于监控持续重复的工作，旨在提供一个开放易用的软件平台，使软件项目可以进行持续集成。
+Jenkins 是一个开源软件项目，是基于 Java 开发的一种持续集成工具，用于监控持续重复的工作，旨在提供一个开放易用的软件平台，使软件项目可以进行持续集成。
 
 ## 1 部署  
 
@@ -16,7 +16,7 @@ Jenkins是一个开源软件项目，是基于Java开发的一种持续集成工
 10 GB 的硬盘空间（用于 Jenkins 和 Docker 镜像）
 - 需要安装以下软件：
 Java 8 （JRE 或者 JDK 都可以）  
-Docker （导航到网站顶部的Get Docker链接以访问适合您平台的Docker下载）  
+Docker （导航到网站顶部的 Get Docker 链接以访问适合您平台的 Docker 下载）  
 
 ### 1.2 安装及初始化  
 
@@ -126,16 +126,16 @@ nohup java -jar -Dspring.profiles.active=$PROFILES $JVM_OPTION $FILE_PATH >> $LO
 #!/bin/bash
 BUILD_ID=springboot-demo
 
-CID=`docker ps -a | grep springboot-demo | awk '{print $1}'`
-if [ ! -z "$CID" ]
+containerId=`docker ps -a | grep springboot-demo | awk '{print $1}'`
+if [ ! -z "$containerId" ]
 then
-   docker stop $CID
-   docker rm $CID
+   docker stop $containerId
+   docker rm $containerId
 fi
-IID=`docker images | grep springboot-demo | awk '{print $3}'`
-if [ ! -z "$IID" ]
+imageId=`docker images | grep springboot-demo | awk '{print $3}'`
+if [ ! -z "$imageId" ]
 then
-   docker rmi $IID
+   docker rmi $imageId
 fi
 
 docker build -t "springboot-demo:1.0" springboot-demo
