@@ -17,15 +17,20 @@ chmod +x minio
 sudo mv minio /usr/local/bin/
 ```
 
-### 1.2 启动
+### 1.2 启动  
 ```
-MINIO_ROOT_USER=admin MINIO_ROOT_PASSWORD=password minio server /mnt/data --address ":9000" --console-address ":9001"
+MINIO_ROOT_USER=admin MINIO_ROOT_PASSWORD=password minio server /data --address ":9000" --console-address ":9001"
 ```
 
-## 数据迁移  
+## 2 数据迁移  
 默认数据路径 /data
 
 备份数据到 backup
 ```
 mc cp --recursive /data/mybucket backup
 ```
+
+## 3 问题与修复  
+
+### AccessDenied  
+登录 minio 后台，进入桶管理（Administrator > Buckets），选择指定的桶，将 Summary 下的 Access Policy 修改为 Public。
