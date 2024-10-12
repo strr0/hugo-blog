@@ -17,7 +17,15 @@ docker pull mysql:8.0.31
 ```
 创建容器并启动
 ```bash
-docker run -d --name mysql-server -p 3306:3306 -v ./mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=nacos_devtest -e MYSQL_USER=nacos -e MYSQL_PASSWORD=nacos mysql:8.0.31
+docker run -d \
+    --name mysql-server \
+    -p 3306:3306 \
+    -v ./mysql:/var/lib/mysql \
+    -e MYSQL_ROOT_PASSWORD=password \
+    -e MYSQL_DATABASE=nacos_devtest \
+    -e MYSQL_USER=nacos \
+    -e MYSQL_PASSWORD=nacos \
+    mysql:8.0.31
 ```
 导入 [nacos](https://raw.githubusercontent.com/alibaba/nacos/develop/distribution/conf/mysql-schema.sql) 数据
 
@@ -45,7 +53,13 @@ NACOS_AUTH_TOKEN=SecretKey012345678901234567890123456789012345678901234567890123
 ```
 创建容器并启动
 ```bash
-docker run -d --name nacos-server -p 8848:8848 -p 9848:9848 -v ./nacos/logs:/home/nacos/logs --env-file nacos.env nacos/nacos-server:v2.3.0
+docker run -d \
+    --name nacos-server \
+    -p 8848:8848 \
+    -p 9848:9848 \
+    -v ./nacos/logs:/home/nacos/logs \
+    --env-file nacos.env \
+    nacos/nacos-server:v2.3.0
 ```
 启动成功后使用 nacos/nacos 访问 [http://localhost:8848/nacos](http://localhost:8848/nacos) 即可进入 web 管理页面
 
