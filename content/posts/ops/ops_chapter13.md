@@ -43,8 +43,8 @@ mvn clean package -DskipTests
 |            插件             |       版本        |                  备注                 |
 | :-------------------------: | :---------------: | :-----------------------------------: |
 |  maven-dependency-plugin    |      3.6.1        |             依赖输出                   |
-|  maven-jar-plugin           |      3.3.0        |  项目代码打包配置（可配置包含及忽略文件）  |
-|  maven-assembly-plugin      |      3.6.0        |  其他文件打包配置（如依赖及配置文件等）   |
+|  maven-jar-plugin           |      3.3.0        |  项目代码打包（可配置包含及忽略文件）  |
+|  maven-assembly-plugin      |      3.6.0        |  其他文件打包（如依赖及配置文件等）   |
 
 #### 1.2.1 依赖输出  
 
