@@ -1,6 +1,6 @@
 ---
 title: "基础环境配置"
-date: 2024-07-12T10:00:00+08:00
+date: 2024-11-11T17:00:00+08:00
 tags: ["linux"]
 draft: false
 ---
@@ -84,4 +84,26 @@ yum install git
 ### 3.2 验证
 ```
 git --version
+```
+
+## 4 防火墙配置  
+
+### 4.1 获取所有端口  
+```
+firewall-cmd --list-all
+```
+
+### 4.2 开放端口  
+```
+firewall-cmd --zone=public --add-port=8080/tcp --permanent
+```
+
+### 4.3 关闭端口  
+```
+firewall-cmd --remove-port=8080/tcp --permanent
+```
+
+### 4.4 刷新端口  
+```
+firewall-cmd --reload
 ```
