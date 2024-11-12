@@ -1,63 +1,150 @@
 ---
 title: "Linux 环境下 Nginx 的安装与使用"
-date: 2023-07-18T15:00:00+08:00
+date: 2024-11-12T11:00:00+08:00
 tags: ["linux"]
 draft: false
 ---
 
-## 介绍
+## 介绍  
 Nginx
 
-## 1 安装
-下载 [nginx](http://nginx.org/download/nginx-1.25.1.tar.gz)  
-解压
-```
-tar -xzvf nginx-1.25.1.tar.gz -C /opt/software
-```
-安装 nginx 环境依赖
+## 1 安装  
+
+### 1.1 编译环境依赖  
 ```
 ### yum install gcc zlib zlib-devel pcre pcre-devel openssl openssl-devel
 apt install gcc zlib1g zlib1g-dev libpcre3-dev libssl-dev
 ```
-编译及安装
+
+### 1.2 获取源码  
 ```
-/opt/software/nginx-1.25.1/configure
+wget http://nginx.org/download/nginx-1.25.1.tar.gz
+```
+
+### 1.3 编译  
+```
+tar -xzvf nginx-1.25.1.tar.gz
+cd nginx-1.25.1
+./configure
 make
+```
+
+### 1.3 安装  
+安装到 /usr/local/bin  
+```
 make install
 ```
 
-## 2 使用
-配置
+## 2 使用  
+
+### 2.1 复制配置（可选）  
 ```
 cp /usr/local/nginx/conf/nginx.conf /usr/local/nginx/conf/nginx-web.conf
-vim /usr/local/nginx/conf/nginx-web.conf
 ```
-配置模板如下
+
+### 2.2 配置模板  
 ```
-nginx-web.conf
-server {
-  listen 8080;
-  server_name localhost;
-  location / {
-    root /home/xxxx;
-    index index.html;
+http {
+  upstream backend {
+    ip_hash;
+    server 127.0.0.1:8081;
   }
-  location /api/ {
-    proxy_set_header X-Forwarded-Host $host;
-    proxy_set_header X-Forwarded-Server $host;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header Host $host:$server_port;
-    proxy_pass http://xxxxxx:xxxx/;
+
+  server {
+    listen 8080;
+    server_name localhost;
+
+    location / {
+      root /home/xxxx;
+      index index.html;
+    }
+
+    location /api/ {
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header REMOTE-HOST $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_pass http://backend/;
+    }
   }
 }
 ```
-启动与停止
+
+### 2.3 配置模板（多项目）  
+
+#### 2.3.1 修改前端配置  
+vite.config.js 配置添加前缀  
 ```
-### 启动
+export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
+  const env = loadEnv(mode, process.cwd());
+  return {
+    // 前缀配置，如 /system-a
+    base: env.VITE_APP_CONTEXT_PATH
+  }
+}
+```
+router/index.js 配置添加前缀  
+```
+const router = createRouter({
+  // 前缀配置，如 /system-a
+  history: createWebHistory(import.meta.env.VITE_APP_CONTEXT_PATH),
+});
+```
+axios 请求添加前缀  
+```
+const service = axios.create({
+  // 前缀配置，如 /system-a/api
+  baseURL: import.meta.env.VITE_APP_BASE_API,
+  timeout: 50000
+});
+```
+
+#### 2.3.2 Nginx 配置  
+```
+http {
+  upstream backend {
+    ip_hash;
+    server 127.0.0.1:8081;
+  }
+
+  server {
+    listen 8080;
+    server_name localhost;
+
+    location / {
+      root       /usr/share/nginx/html/dist;
+      try_files  $uri $uri/ /index.html;
+      index      index.html index.htm;
+    }
+
+    location /system-a {
+      alias      /usr/share/nginx/html/system-a/dist;
+      try_files  $uri $uri/ /system-a/index.html;
+      index      index.html index.htm;
+    }
+
+    location /api/ {
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header REMOTE-HOST $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_pass http://backend/;
+    }
+  }
+}
+```
+
+### 2.4 启动与停止  
+启动  
+```
 /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx-web.conf
-### 重启
+```
+刷新配置  
+```
 /usr/local/nginx/sbin/nginx -s reload -c /usr/local/nginx/conf/nginx-web.conf
-### 停止
+```
+停止  
+```
 /usr/local/nginx/sbin/nginx -s stop
 ```
 
