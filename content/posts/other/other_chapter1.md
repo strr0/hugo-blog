@@ -151,7 +151,7 @@ myhostname（主机名）
 ```
 安装网络程序
 ```
-pacman -S iwd dhcpcd networkmanager
+pacman -S dhcpcd networkmanager
 ```
 #### 3.7 使用 passwd 设置 root 密码
 ```
@@ -260,13 +260,39 @@ GLFW_IM_MODULE=ibus
 配置输入法，配置文件位于 ~/.config/fcitx5，可使用 GUI 配置（需安装 fcitx5-configtool）  
 
 ### 5 其他  
-edge浏览器
+
+#### 5.1 浏览器  
 ```
 yay -S microsoft-edge-stable-bin
 ```
-vscode
+
+#### 5.2 开发工具  
 ```
 yay -S visual-studio-code-bin
+```
+
+#### 5.3 远程连接  
+安装  
+```
+pacman -S openssh
+```
+生成秘钥  
+```
+ssh-keygen -A
+```
+运行  
+```
+/usr/bin/sshd
+```
+
+#### 5.4 联网  
+命令行  
+```
+nmcli device wifi connect SSID_or_BSSID（名称） password password（密码）
+```
+图形化页面  
+```
+nmtui
 ```
 
 ## 问题与解决
@@ -293,3 +319,6 @@ EnableNetworkConfiguration=true
 ```
 systemctl start systemd-resolved
 ```
+
+### 4 虚拟机配置  
+设置 > 选项 > 高级 > 固件类型 > UEFI  
