@@ -149,7 +149,7 @@ repo sync -c
 #### 2.2.3 添加设备信息  
 在 manifest 标签中添加如下配置  
 ```
-<project path="device/[manufacturer]/[device]" name="[repository name]" remote="[remote]" revision="[revision]" />
+<project path="device/[manufacturer] / [device]" name="[repository name]" remote="[remote]" revision="[revision]" />
 ```
 
 #### 2.2.4 添加依赖信息  
@@ -238,16 +238,25 @@ breakfast [codename]
 ```
 grep "TARGET_KERNEL_CONFIG" device/<VENDOR>/<CODENAME>/BoardConfig.mk
 ```
-检查配置  
+检查配置及修复  
 ```
-git clone https://github.com/mer-hybris/mer-kernel-check
-cd mer-kernel-check
-./mer_verify_kernel_config <path to kernel configuration>
+./halium/halium-boot/check-kernel-config path/to/my/defconfig -w
 ```
-提示 WARNING 可以忽略，修改 ERROR 的即可  
-最后 CONFIG_IKCONFIG 和 CONFIG_IKCONFIG_PROC 需要设置为 y，否则设备将无法启动  
+~~提示 WARNING 可以忽略，修改 ERROR 的即可~~  
+~~最后 CONFIG_IKCONFIG 和 CONFIG_IKCONFIG_PROC 需要设置为 y，否则设备将无法启动~~  
 
-#### 2.3.4 挂载点修复  
+#### 2.3.4 Ubuntu Touch 配置  
+在 BoardConfig.mk 配置中添加（~/halium/device/<vendor>/<model_codename>/BoardConfig.mk）  
+```
+BOARD_KERNEL_CMDLINE += console=tty0
+```
+如果在 boot 之后不能 ssh 连接，尝试修改内核配置  
+```
+CONFIG_CMDLINE="console=tty0"
+CONFIG_CMDLINE_EXTEND=y
+```
+
+#### 2.3.5 挂载点修复  
 检查设备型号是否在挂载点修复脚本中（<BUILDDIR>/halium/hybris-boot/fixup-mountpoints），如果不在则需要手动添加：  
 1 找到设备的 fstab（如 Moto G5 Plus，在 device/motorola/potter/rootdir/etc 的 fstab.qcom）  
 2 使用 adb shell 进入并获取 root 权限  
@@ -265,13 +274,12 @@ cd mer-kernel-check
   -e 's [src] [return] ' \
 ```
 
-#### 2.3.5 添加 Hybris 补丁  
+#### 2.3.6 添加 Hybris 补丁（halium 9 以上）  
 ```
-git clone -b hybris-16.0 https://github.com/mer-hybris/hybris-patches
 hybris-patches/apply-patches.sh --mb
 ```
 
-#### 2.3.6 构建镜像  
+#### 2.3.7 构建镜像  
 生成构建工具  
 ```
 mka mkbootimg
@@ -279,7 +287,7 @@ mka mkbootimg
 构建镜像  
 ```
 export USE_HOST_LEX=yes
-mka hybris-boot
+mka halium-boot
 mka systemimage
 ```
 
