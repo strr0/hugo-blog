@@ -5,56 +5,42 @@ tags: ["linux", "mysql"]
 draft: false
 ---
 
-## 介绍
-[Docker Engine](https://docs.docker.com/engine) 是一种开源容器化技术，用于构建和容器化应用程序。
+## 介绍  
+[Docker Engine](https://docs.docker.com/engine/install/binaries/) 是一种开源容器化技术，用于构建和容器化应用程序。
 
-## 1 环境要求
-### 1.1 系统要求  
-安装 Docker 需要如下 64 位的 Ubuntu 系统
-- Ubuntu Lunar 23.04
-- Ubuntu Kinetic 22.10
-- Ubuntu Jammy 22.04 (LTS)
-- Ubuntu Focal 20.04 (LTS)
+## 1 环境要求  
+- 64 位系统  
+- 内核版本 3.10 及以上  
+- iptables 版本 1.4 及以上  
+- git 版本 1.7 及以上  
+- ps 命令（procps 或其他包提供）  
+- XZ Utils 版本 4.9 及以上  
+- cgroupfs  
 
-### 1.2 卸载旧版本  
-在安装 Docker 前需要卸载任何可能冲突的包
-- docker.io
-- docker-compose
-- docker-compose-v2
-- docker-doc
-- podman-docker
+## 2 安装  
 
-执行如下命令卸载
+### 2.1 获取二进制文件  
 ```bash
-for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+wget https://download.docker.com/linux/static/stable/<architecture>/docker-<version>.tgz
 ```
 
-## 2 安装
-### 2.1 设置 Docker 仓库  
-添加官方 GPG Key
+### 2.2 安装二进制文件  
+解压  
 ```bash
-sudo apt-get update
-sudo apt-get install ca-certificates curl gnupg
-sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
+tar -xzvf docker-<version>.tgz
 ```
-添加仓库地址到 apt 源
+安装  
 ```bash
-echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu/ \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
+sudo cp docker/* /usr/bin/
 ```
 
-### 2.2 安装 Docker
+### 2.3 运行  
 ```bash
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo dockerd &
 ```
 
-### 2.3 配置国内镜像源
-修改 /etc/docker/daemon.json
+### 2.4 配置国内镜像源  
+修改 /etc/docker/daemon.json  
 ```
 {
   "registry-mirrors": [
@@ -63,73 +49,98 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
   ]
 }
 ```
-重启 docker
+重启 docker  
 ```
-service docker restart
+PID=`ps -ef | grep dockerd | awk '{print $2}'`
+if [ ! -z "$PID" ]
+then
+   sudo kill -9 $PID
+fi
+sudo dockerd &
 ```
 
-## 3 基础操作
-### 3.1 Docker
-启动 docker
+## 3 使用  
+
+### 3.1 基础操作  
+拉取镜像  
 ```
-service docker start
+docker pull <myimage>:<version>
 ```
-停止 docker
+运行容器（-p 端口映射 --name 容器名 -d 后台运行）  
 ```
-service docker stop
+docker run -p 8080:8080 --name <mycontainer> -d <myimage>:<version>
 ```
-拉取镜像
+停止容器  
 ```
-docker pull myimage:version
+docker stop <mycontainer>
 ```
-运行容器（-p 端口映射 --name 容器名 -d 后台运行）
+进入容器  
 ```
-docker run -p 8080:8080 --name mycontainer -d myimage:version
+docker exec -it <mycontainer> /bin/bash
 ```
-停止容器
+
+### 3.2 文件磁盘相关  
+复制容器文件  
 ```
-docker stop mycontainer
+docker cp <mycontainer>:/path/in/container /path/on/host
 ```
-进入容器
-```
-docker exec -it mycontainer /bin/bash
-```
-复制容器文件
-```
-docker cp mycontainer:/path/in/container /path/on/host
-```
-磁盘空间查看
+磁盘空间查看  
 ```
 docker system df
 ```
-磁盘空间清理
+磁盘空间清理  
 ```
 docker system prune -a
 ```
-强制清理
+强制清理  
 ```
 systemctl stop docker
 rm -rf /var/lib/docker
 systemctl start docker
 ```
-判断容器是否存在
+
+### 3.3 导入导出  
+导出镜像  
 ```
-if docker ps -a | grep -q mycontainer; then
-  ...
+docker save -o <myimage_version>.tar <myimage>:<version>
+```
+导入镜像  
+```
+docker load -i <myimage_version>.tar
+```
+导出容器  
+```
+docker export -o <mycontainer>.tar <mycontainer>
+```
+导入容器  
+```
+docker import <mycontainer>.tar <myimage>:<version>
+```
+
+### 3.4 其他操作  
+判断容器是否存在  
+```
+ID = `docker ps -a | grep <mycontainer> | awk '{print $1}'`
+if [ ! -z "$ID" ]
+then
+   ...
 fi
 ```
-判断镜像是否存在
+判断镜像是否存在  
 ```
-if docker images | grep -q myimage; then
+ID = `docker images | grep <myimage> | awk '{print $1}'`
+if [ ! -z "$ID" ]
+then
   ...
 fi
 ```
 
-### 3.2 Docker Compose
-#### 3.2.1 安装
+## 4 Docker Compose  
+
+### 4.1 安装  
 下载及安装
 ```
-curl -SL https://github.com/docker/compose/releases/download/v2.20.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+curl -SL https://github.com/docker/compose/releases/download/<version>/docker-compose-linux-<architecture> -o /usr/local/bin/docker-compose
 ```
 赋予权限
 ```
@@ -139,7 +150,8 @@ chmod +x /usr/local/bin/docker-compose
 ```
 docker-compose --version
 ```
-#### 3.2.2 使用
+
+### 4.2 使用  
 基本配置
 ```
 docker-compose.yml
@@ -179,13 +191,15 @@ services:
 docker-compose -f docker-compose.yml up -d
 ```
 
-## 4 其他问题
-### 4.1 普通用户 permission denied 问题
+## 5 其他问题  
+
+### 5.1 普通用户 permission denied 问题  
 ```
 sudo gpasswd -a ${USER} docker   # 将当前用户添加到docker组
 newgrp docker                    # 更新用户组
 ```
-### 4.2 开启远程访问  
+
+### 5.2 开启远程访问  
 修改 docker.service
 ```
 /lib/systemd/system/docker.service
