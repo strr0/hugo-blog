@@ -1,6 +1,6 @@
 ---
 title: "Linux 环境下 Docker 的安装与使用"
-date: 2023-04-06T21:00:00+08:00
+date: 2024-11-24T10:00:00+08:00
 tags: ["linux", "mysql"]
 draft: false
 ---
@@ -92,11 +92,9 @@ docker system df
 ```
 docker system prune -a
 ```
-强制清理  
+强制清理（需先停止 docker 服务）  
 ```
-systemctl stop docker
 rm -rf /var/lib/docker
-systemctl start docker
 ```
 
 ### 3.3 导入导出  
@@ -117,7 +115,23 @@ docker export -o <mycontainer>.tar <mycontainer>
 docker import <mycontainer>.tar <myimage>:<version>
 ```
 
-### 3.4 其他操作  
+### 3.4 代理  
+使用 dockerd 命令  
+```
+sudo dockerd --http-proxy=socks5://127.0.0.1:1080 --https-proxy=socks5://127.0.0.1:1080 &
+```
+使用 daemon.json 配置  
+```
+{
+  "proxies": {
+    "http-proxy": "http://proxy.example.com:3128",
+    "https-proxy": "https://proxy.example.com:3129",
+    "no-proxy": "*.test.example.com,.example.org,127.0.0.0/8"
+  }
+}
+```
+
+### 3.5 其他操作  
 判断容器是否存在  
 ```
 ID = `docker ps -a | grep <mycontainer> | awk '{print $1}'`
@@ -135,9 +149,9 @@ then
 fi
 ```
 
-## 4 Docker Compose  
+### 3.6 插件（docker compose）
 
-### 4.1 安装  
+#### 3.6.1 安装  
 下载及安装
 ```
 curl -SL https://github.com/docker/compose/releases/download/<version>/docker-compose-linux-<architecture> -o /usr/local/bin/docker-compose
@@ -151,7 +165,7 @@ chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 ```
 
-### 4.2 使用  
+#### 3.6.2 使用  
 基本配置
 ```
 docker-compose.yml
@@ -191,15 +205,25 @@ services:
 docker-compose -f docker-compose.yml up -d
 ```
 
-## 5 其他问题  
+## 4 其他问题  
 
-### 5.1 普通用户 permission denied 问题  
+### 4.1 普通用户 permission denied 问题  
+创建 docker 组（若不存在）  
 ```
-sudo gpasswd -a ${USER} docker   # 将当前用户添加到docker组
-newgrp docker                    # 更新用户组
+sudo groupadd docker
+```
+将当前用户添加到 docker 组
+```
+sudo usermod -aG docker $USER
+```
+更新用户组
+```
+newgrp docker
 ```
 
-### 5.2 开启远程访问  
+> 如果问题仍然存在，尝试重启 docker 服务  
+
+### 4.2 开启远程访问  
 修改 docker.service
 ```
 /lib/systemd/system/docker.service
