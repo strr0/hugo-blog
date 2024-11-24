@@ -1,5 +1,5 @@
 ---
-title: "Lightweight proxy on Linux"
+title: "Proxy on linux"
 date: 2023-09-15T17:00:00+08:00
 draft: false
 ---
@@ -9,26 +9,38 @@ proxy
 
 ## 1 Shadowsocks  
 
-### 1.1 Install  
+### 1.1 Regular  
 
-#### 1.1.1 Use aur packges  
+#### 1.1.1 Download release  
 
-##### Install shadowocks  
-
-```cmd
-yay -S shadowsocks-rust
+```bash
+wget https://github.com/shadowsocks/shadowsocks-rust/releases/download/<version>/shadowsocks-<version>.x86_64-unknown-linux-gnu.tar.xz
 ```
+
+#### 1.1.2 Decompression  
+
+```bash
+tar -xvf shadowsocks-<version>.x86_64-unknown-linux-gnu.tar.xz
+```
+
+#### 1.1.3 Enter directory  
+
+```
+cd shadowsocks-<version>.x86_64-unknown-linux-gnu
+```
+
+#### 1.1.4 Client  
 
 ##### Start local client with configuration file  
 
-```cmd
+```bash
 # Read local client configuration from file
 sslocal -c /path/to/shadowsocks.json
 ```
 
 ##### Socks5 Local client  
 
-```cmd
+```bash
 # Pass all parameters via command line
 sslocal -b "127.0.0.1:1080" -s "[::1]:8388" -m "aes-256-gcm" -k "hello-kitty" --plugin "v2ray-plugin" --plugin-opts "server;tls;host=github.com"
 
@@ -38,41 +50,57 @@ sslocal -b "127.0.0.1:1080" --server-url "ss://YWVzLTI1Ni1nY206cGFzc3dvcmQ@127.0
 
 ##### HTTP Local client  
 
-```cmd
+```bash
 sslocal -b "127.0.0.1:3128" --protocol http -s "[::1]:8388" -m "aes-256-gcm" -k "hello-kitty"
 ```
 
 All parameters are the same as Socks5 client, except `--protocol http`.  
 
-#### 1.1.2 Use docker  
+#### 1.1.5 Server  
+
+##### Start server with configuration file  
+
+```bash
+# Read server configuration from file
+ssserver -c /path/to/shadowsocks.json
+```
+
+##### Start server  
+
+```bash
+# Pass all parameters via command line
+ssserver -s "[::]:8388" -m "aes-256-gcm" -k "hello-kitty" --plugin "v2ray-plugin" --plugin-opts "server;tls;host=github.com"
+```
+
+### 1.2 Docker  
 
 This project provided Docker images for the `linux/i386` and `linux/amd64` and `linux/arm64/v8` architectures.
 
 > ⚠️ **Docker containers do not have access to IPv6 by default**: Make sure to disable IPv6 Route in the client or [enable IPv6 access to docker containers](https://docs.docker.com/config/daemon/ipv6/#use-ipv6-for-the-default-bridge-network).
 
-##### Pull from GitHub Container Registry  
+#### 1.2.1 Pull from GitHub Container Registry  
 
 Docker will pull the image of the appropriate architecture from our [GitHub Packages](https://github.com/orgs/shadowsocks/packages?repo_name=shadowsocks-rust).
 
-```cmd
+```bash
 docker pull ghcr.io/shadowsocks/sslocal-rust:v1.21.2
 docker pull ghcr.io/shadowsocks/ssserver-rust:v1.21.2
 ```
 
-##### Build on the local machine（Optional）  
+#### 1.2.2 Build on the local machine（Optional）  
 
 If you want to build the Docker image yourself, you need to use the [BuildX](https://docs.docker.com/buildx/working-with-buildx/).  
 
-```cmd
+```bash
 docker buildx build -t shadowsocks/ssserver-rust:v1.21.2 -t shadowsocks/ssserver-rust:v1.21.2 --target ssserver .
 docker buildx build -t shadowsocks/sslocal-rust:v1.21.2 -t shadowsocks/sslocal-rust:v1.21.2 --target sslocal .
 ```
 
-##### Run the container  
+#### 1.2.3 Run the container  
 
 You need to mount the configuration file into the container and create an external port map for the container to connect to it.  
 
-```cmd
+```bash
 docker run --name sslocal-rust \
   --restart always \
   -p 1080:1080/tcp \
@@ -87,7 +115,7 @@ docker run --name ssserver-rust \
   -dit ghcr.io/shadowsocks/ssserver-rust:v1.21.2
 ```
 
-Create a ShadowSocks' configuration file. Example  
+### 1.3 Configuration  
 
 ```json
 {
@@ -102,13 +130,13 @@ Create a ShadowSocks' configuration file. Example
 }
 ```
 
-### 1.2 Usage
+### 1.4 Usage
 
-#### 1.2.1 Proxychains  
+#### 1.4.1 Proxychains  
 
 ##### Install proxychains  
 
-```cmd
+```bash
 pacman -S proxychains
 ```
 
@@ -122,15 +150,15 @@ socks5 127.0.0.1 1080
 
 ##### Using in terminal  
 
-```cmd
-proxychains ping -c4 www.example.com
+```bash
+proxychains curl www.example.com
 ```
 
-#### 1.2.2 Privoxy  
+#### 1.4.2 Privoxy  
 
 ##### Install privoxy  
 
-```cmd
+```bash
 pacman -S privoxy
 ```
 
@@ -145,26 +173,112 @@ listen-address  127.0.0.1:8118
 
 ##### Start browser with privoxy  
 
-```cmd
+```bash
 systemctl start privoxy
 chromium --proxy-server="http://127.0.0.1:8118"
 ```
 
-## 2 Clash  
+## 2 ShadowsocksR  
 
-### 2.1 Install  
+### 2.1 Regular  
 
-#### 2.1.1 Use docker  
+#### 2.1.1 Obtain source code  
 
-##### Pull from Container Registry 
+```bash
+git clone -b manyuser https://github.com/shadowsocksr-backup/shadowsocksr.git
+```
 
-```cmd
+#### 2.1.2 Enter subdirectory  
+
+```bash
+cd shadowsocksr/shadowsocks
+```
+
+#### 2.1.3 Running via command line  
+
+```bash
+python local.py -s <server_ip> \
+                -p <port> \
+                -k <keyphrase> \
+                -m <encryption> \
+                -o <obfus> \
+                -O <protocol> \
+                -l <local_port>
+```
+
+#### 2.1.4 Running via configuration file  
+
+```
+python local.py -c /etc/shadowsocks.json
+```
+
+#### 2.1.5 Stop or restart the daemon  
+
+```
+python local.py -d stop/restart
+```
+
+### 2.2 Docker  
+
+#### 2.2.1 Pull from Container Registry  
+
+```
+docker pull breakwa11/shadowsocksr:manyuser
+```
+
+#### 2.2.2 Running in docker  
+
+```
+docker run --name ssrlocal \
+  --restart always \
+  -p 1080:1080/tcp \
+  -v /path/to/config.json:/etc/shadowsocks.json \
+  -d breakwa11/shadowsocksr:manyuser
+```
+
+### 2.3 Configuration  
+
+```json
+{
+    "server": "0.0.0.0",
+    "server_ipv6": "::",
+    "server_port": 8388,
+    "local_address": "127.0.0.1",
+    "local_port": 1080,
+
+    "password": "m",
+    "method": "aes-128-ctr",
+    "protocol": "auth_aes128_md5",
+    "protocol_param": "",
+    "obfs": "tls1.2_ticket_auth_compatible",
+    "obfs_param": "",
+    "speed_limit_per_con": 0,
+    "speed_limit_per_user": 0,
+
+    "additional_ports" : {}, // only works under multi-user mode
+    "additional_ports_only" : false, // only works under multi-user mode
+    "timeout": 120,
+    "udp_timeout": 60,
+    "dns_ipv6": false,
+    "connect_verbose_info": 0,
+    "redirect": "",
+    "fast_open": false
+}
+```
+
+## 3 Clash  
+
+### 3.1 Docker  
+
+#### 3.1.1 Pull from Container Registry  
+
+```bash
 docker pull dreamacro/clash:v1.18.0
 ```
 
-##### Run the container  
+#### 3.1.2 Run the container  
 
-```cmd
+```bash
 docker run --name clash \
   --restart always \
   -p 7890:7890 \
@@ -177,7 +291,7 @@ docker run --name clash \
   -d dreamacro/clash:v1.18.0
 ```
 
-##### Example Configuration  
+### 3.2 Configuration  
 
 ```yaml
 # port of HTTP
@@ -476,12 +590,135 @@ rules:
   - MATCH,auto
 ```
 
-### 2.2 Usage  
+### 3.3 Usage  
 
-#### 2.2.1 Proxy  
+#### 3.3.1 Proxy  
 
-```
+```bash
 export https_proxy=http://127.0.0.1:7890
 export http_proxy=http://127.0.0.1:7890
 export all_proxy=socks5://127.0.0.1:7891
+```
+
+## 4 V2ray  
+
+### 4.1 Regular  
+
+#### 4.1.1 Obtain binaries file  
+
+```bash
+wget https://github.com/v2fly/v2ray-core/releases/download/<version>/v2ray-linux-64.zip
+```
+
+#### 4.1.2 Decompression  
+
+```bash
+unzip v2ray-linux-64.zip
+```
+
+#### 4.1.3 Enter subdirectory  
+
+```
+cd v2ray-linux-64
+```
+
+#### 4.1.4 Running via command line  
+
+```bash
+v2ray run -c /etc/v2ray/config.json
+```
+
+### 4.2 Docker  
+
+#### 4.2.1 Pull from Container Registry  
+
+```
+docker pull v2fly/v2fly-core:v5.16.1
+```
+
+#### 4.2.2 Run the container  
+
+```
+docker run --name v2ray \
+  -p 10086:10086 \
+  -v /path/to/config.json:/etc/v2ray/config.json \
+  -d v2fly/v2fly-core:v5.16.1 run -c /etc/v2ray/config.json
+```
+
+### 4.3 Configuration  
+
+#### 4.3.1 Server  
+
+```json
+{
+    "inbounds": [
+        {
+            "port": 10086, // 服务器监听端口
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "b831381d-6324-4d53-ad4f-8cda48b30811"
+                    }
+                ]
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom"
+        }
+    ]
+}
+```
+
+#### 4.3.2 Client  
+
+```json
+{
+    "inbounds": [
+        {
+            "port": 1080, // SOCKS 代理端口，在浏览器中需配置代理并指向这个端口
+            "listen": "127.0.0.1",
+            "protocol": "socks",
+            "settings": {
+                "udp": true
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "vmess",
+            "settings": {
+                "vnext": [
+                    {
+                        "address": "server", // 服务器地址，请修改为你自己的服务器 ip 或域名
+                        "port": 10086, // 服务器端口
+                        "users": [
+                            {
+                                "id": "b831381d-6324-4d53-ad4f-8cda48b30811"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "protocol": "freedom",
+            "tag": "direct"
+        }
+    ],
+    "routing": {
+        "domainStrategy": "IPOnDemand",
+        "rules": [
+            {
+                "type": "field",
+                "ip": [
+                    "geoip:private"
+                ],
+                "outboundTag": "direct"
+            }
+        ]
+    }
+}
 ```
