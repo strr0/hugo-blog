@@ -62,24 +62,75 @@ sudo dockerd &
 ## 3 使用  
 
 ### 3.1 基础操作  
+查看镜像列表  
+```
+docker images
+```
+查看容器列表  
+```
+docker ps -a
+```
 拉取镜像  
 ```
 docker pull <myimage>:<version>
+```
+删除镜像  
+```
+docker rmi <myimage>
 ```
 运行容器（-p 端口映射 --name 容器名 -d 后台运行）  
 ```
 docker run -p 8080:8080 --name <mycontainer> -d <myimage>:<version>
 ```
+修改容器默认命令  
+```
+docker run <myimage> <mycommand>
+```
 停止容器  
 ```
 docker stop <mycontainer>
+```
+删除容器  
+```
+docker rm <mycontainer>
 ```
 进入容器  
 ```
 docker exec -it <mycontainer> /bin/bash
 ```
+查看日志  
+```
+docker logs -f --tail 100 <mycontainer>
+```
 
-### 3.2 文件磁盘相关  
+### 3.2 网络  
+
+#### 3.2.1 操作  
+查看网络列表  
+```
+docker network ls
+```
+创建网络  
+```
+docker network create <mynetwork>
+```
+删除网络  
+```
+docker network rm <mynetwork>
+```
+
+#### 3.2.2 使用  
+运行容器指定连接网络  
+```
+docker run --name <mycontainer> -d <myimage>:<version> --net=<mynetwork>
+```
+已有容器连接网络  
+```
+docker network connect <mynetwork> <mycontainer>
+```
+> 连接至相同网络的容器可以通过 http://mycontainer:port 相互访问
+
+### 3.3 文件磁盘  
 复制容器文件  
 ```
 docker cp <mycontainer>:/path/in/container /path/on/host
@@ -97,7 +148,7 @@ docker system prune -a
 rm -rf /var/lib/docker
 ```
 
-### 3.3 导入导出  
+### 3.4 导入导出  
 导出镜像  
 ```
 docker save -o <myimage_version>.tar <myimage>:<version>
@@ -115,7 +166,7 @@ docker export -o <mycontainer>.tar <mycontainer>
 docker import <mycontainer>.tar <myimage>:<version>
 ```
 
-### 3.4 代理  
+### 3.5 代理  
 使用 dockerd 命令  
 ```
 sudo dockerd --http-proxy=socks5://127.0.0.1:1080 --https-proxy=socks5://127.0.0.1:1080 &
@@ -131,7 +182,15 @@ sudo dockerd --http-proxy=socks5://127.0.0.1:1080 --https-proxy=socks5://127.0.0
 }
 ```
 
-### 3.5 其他操作  
+### 3.6 其他操作  
+获取容器 command  
+```
+docker inspect --format '{{.Config.Cmd}}' <mycontainer>
+```
+修改镜像名称和 tag  
+```
+docker tag <oldname>:<oldtag> <newname>:<newtag>
+```
 判断容器是否存在  
 ```
 ID = `docker ps -a | grep <mycontainer> | awk '{print $1}'`
@@ -142,16 +201,76 @@ fi
 ```
 判断镜像是否存在  
 ```
-ID = `docker images | grep <myimage> | awk '{print $1}'`
+ID = `docker images | grep <myimage> | awk '{print $3}'`
 if [ ! -z "$ID" ]
 then
   ...
 fi
 ```
 
-### 3.6 插件（docker compose）
+### 3.7 构建镜像  
 
-#### 3.6.1 安装  
+#### 3.7.1 编写 Dockerfile  
+```
+FROM openjdk:17-jdk-alpine3.14
+
+RUN mkdir -p /app/lib \
+    /app/config 
+
+WORKDIR /app
+
+ENV SERVER_PORT=9201 LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_OPTS=""
+
+EXPOSE ${SERVER_PORT}
+
+ADD lib/* lib
+ADD config/* config
+ADD demo.jar app.jar
+
+ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${SERVER_PORT} \
+           -jar app.jar \
+           -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc*,:time,tags,level -XX:+UseZGC ${JAVA_OPTS}
+```
+
+#### 3.7.2 构建  
+```
+docker build -t <myimage>:<version> <dockerfilepath>
+```
+
+#### 3.7.3 运行与停止  
+运行  
+```
+img="demo"
+
+version=$(date "+%Y-%m-%d")
+
+imgId=`docker images | grep $img | grep $version | awk '{print $3}'`
+if [ ! -z "$imgId" ]
+then
+  docker rmi $imgId
+fi
+
+docker build -t $img:$version .
+
+docker run --name $img \
+    -p 8080:8080 \
+    -d $img:$version
+```
+停止  
+```
+app="demo"
+
+appId=`docker ps -a | grep $app | awk '{print $1}'`
+if [ ! -z "$appId" ]
+then
+  docker stop $appId
+  docker rm $appId
+fi
+```
+
+### 3.8 插件（docker compose）
+
+#### 3.8.1 安装  
 下载及安装
 ```
 curl -SL https://github.com/docker/compose/releases/download/<version>/docker-compose-linux-<architecture> -o /usr/local/bin/docker-compose
@@ -165,7 +284,7 @@ chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 ```
 
-#### 3.6.2 使用  
+#### 3.8.2 使用  
 基本配置
 ```
 docker-compose.yml
