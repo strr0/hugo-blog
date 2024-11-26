@@ -233,7 +233,7 @@ docker run --name ssrlocal \
   --restart always \
   -p 1080:1080/tcp \
   -v /path/to/config.json:/etc/shadowsocks.json \
-  -d breakwa11/shadowsocksr:manyuser
+  -d breakwa11/shadowsocksr:manyuser python local.py -c /etc/shadowsocks.json
 ```
 
 ### 2.3 Configuration  
