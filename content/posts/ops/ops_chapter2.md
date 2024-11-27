@@ -122,7 +122,7 @@ docker network rm <mynetwork>
 #### 3.2.2 使用  
 运行容器指定连接网络  
 ```
-docker run --name <mycontainer> -d <myimage>:<version> --net=<mynetwork>
+docker run --name <mycontainer> --net <mynetwork> -d <myimage>:<version>
 ```
 已有容器连接网络  
 ```
