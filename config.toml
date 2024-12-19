@@ -15,9 +15,9 @@ hasCJKLanguage = true
 
 # 作者配置
 [author]
-  name = "xxxx"
+  name = "strr0"
   email = ""
-  link = ""
+  link = "https://github.com/strr0"
 
 # 菜单配置
 [menu]
@@ -29,7 +29,7 @@ hasCJKLanguage = true
     # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
     post = ""
     name = "文章"
-    url = "/posts/"
+    url = "/posts/*/"
     # 当你将鼠标悬停在此菜单链接上时, 将显示的标题
     title = ""
   [[menu.main]]
@@ -57,6 +57,7 @@ hasCJKLanguage = true
     noClasses = false
 
 [params]
-  # 数学公式
-  [params.pages.math]
-    enable = true
+  [params.page]
+    # 数学公式
+    [params.page.math]
+      enable = true
