@@ -19,7 +19,7 @@ draft: false
 ### 依赖配置
 
 引入依赖
-```
+```xml
 <dependency>
     <groupId>org.springframework.amqp</groupId>
     <artifactId>spring-rabbit</artifactId>
@@ -32,7 +32,7 @@ draft: false
 </dependency>
 ```
 application 配置
-```
+```yml
 spring:
   rabbitmq:
     host: localhost
@@ -44,7 +44,7 @@ spring:
 ### 直连模式（Direct）
 
 队列及交换机配置
-```
+```java
 @Configuration
 public class RabbitDirectConfig {
     public final static String DIRECTNAME = "strr-direct";
@@ -66,7 +66,7 @@ public class RabbitDirectConfig {
 }
 ```
 生产者配置
-```
+```java
 @Service
 public class ProducerService {
     @Autowired
@@ -78,7 +78,7 @@ public class ProducerService {
 }
 ```
 消费者配置
-```
+```java
 @Service
 public class DirectConsumerService {
     @RabbitListener(queues = "hello-queue")
@@ -88,7 +88,7 @@ public class DirectConsumerService {
 }
 ```
 测试
-```
+```java
 @SpringBootTest
 class ApplicationTests {
     @Autowired
@@ -104,7 +104,7 @@ class ApplicationTests {
 ### 广播模式（Fanout）
 
 队列及交换机配置
-```
+```java
 @Configuration
 public class RabbitFanoutConfig {
     public final static String FANOUTNAME = "strr-fanout";
@@ -136,7 +136,7 @@ public class RabbitFanoutConfig {
 }
 ```
 生产者配置
-```
+```java
 @Service
 public class ProducerService {
     @Autowired
@@ -148,7 +148,7 @@ public class ProducerService {
 }
 ```
 消费者配置
-```
+```java
 @Service
 public class FanoutConsumerService {
     @RabbitListener(queues = "queue-one")
@@ -163,7 +163,7 @@ public class FanoutConsumerService {
 }
 ```
 测试
-```
+```java
 @SpringBootTest
 class ApplicationTests {
     @Autowired
@@ -179,7 +179,7 @@ class ApplicationTests {
 ### Topic模式（根据路由key模糊匹配）
 
 队列及交换机配置
-```
+```java
 @Configuration
 public class RabbitTopicConfig {
     public final static String TOPICNAME = "strr-topic";
@@ -224,7 +224,7 @@ public class RabbitTopicConfig {
 }
 ```
 生产者配置
-```
+```java
 @Service
 public class ProducerService {
     @Autowired
@@ -236,7 +236,7 @@ public class ProducerService {
 }
 ```
 消费者配置
-```
+```java
 @Service
 public class TopicConsumerService {
     @RabbitListener(queues = "topic1-queue")
@@ -256,7 +256,7 @@ public class TopicConsumerService {
 }
 ```
 测试
-```
+```java
 @SpringBootTest
 class ApplicationTests {
     @Autowired
@@ -274,7 +274,7 @@ class ApplicationTests {
 ### Header模式（根据header匹配）
 
 队列及交换机配置
-```
+```java
 @Configuration
 public class RabbitHeaderConfig {
     public final static String HEADERNAME = "strr-header";
@@ -310,7 +310,7 @@ public class RabbitHeaderConfig {
 }
 ```
 生产者配置
-```
+```java
 @Service
 public class ProducerService {
     @Autowired
@@ -322,7 +322,7 @@ public class ProducerService {
 }
 ```
 消费者配置
-```
+```java
 @Service
 public class HeaderConsumerService {
     @RabbitListener(queues = "name-queue")
@@ -337,7 +337,7 @@ public class HeaderConsumerService {
 }
 ```
 测试
-```
+```java
 @SpringBootTest
 class ApplicationTests {
     @Autowired

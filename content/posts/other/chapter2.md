@@ -26,7 +26,7 @@ tar -xvf shadowsocks-<version>.x86_64-unknown-linux-gnu.tar.xz
 
 #### 1.1.3 Enter directory
 
-```
+```bash
 cd shadowsocks-<version>.x86_64-unknown-linux-gnu
 ```
 
@@ -102,18 +102,20 @@ docker buildx build -t shadowsocks/sslocal-rust:v1.21.2 -t shadowsocks/sslocal-r
 You need to mount the configuration file into the container and create an external port map for the container to connect to it.
 
 ```bash
-docker run --name sslocal-rust \
-  --restart always \
-  -p 1080:1080/tcp \
-  -v /path/to/config.json:/etc/shadowsocks-rust/config.json \
-  -dit ghcr.io/shadowsocks/sslocal-rust:v1.21.2
+docker run -d \
+    --name sslocal-rust \
+    --restart always \
+    -p 1080:1080/tcp \
+    -v /path/to/config.json:/etc/shadowsocks-rust/config.json \
+    ghcr.io/shadowsocks/sslocal-rust:v1.21.2
 
-docker run --name ssserver-rust \
-  --restart always \
-  -p 8388:8388/tcp \
-  -p 8388:8388/udp \
-  -v /path/to/config.json:/etc/shadowsocks-rust/config.json \
-  -dit ghcr.io/shadowsocks/ssserver-rust:v1.21.2
+docker run -d \
+    --name ssserver-rust \
+    --restart always \
+    -p 8388:8388/tcp \
+    -p 8388:8388/udp \
+    -v /path/to/config.json:/etc/shadowsocks-rust/config.json \
+    ghcr.io/shadowsocks/ssserver-rust:v1.21.2
 ```
 
 ### 1.3 Configuration
@@ -143,8 +145,8 @@ pacman -S proxychains
 
 ##### Add proxychains config
 
-```
-/etc/proxychains.conf
+```sh
+# /etc/proxychains.conf
 
 socks5 127.0.0.1 1080
 ```
@@ -165,8 +167,8 @@ pacman -S privoxy
 
 ##### Add privoxy config
 
-```
-/etc/privoxy/config
+```sh
+# /etc/privoxy/config
 
 forward-socks5 / 127.0.0.1:1080 .
 listen-address  127.0.0.1:8118
@@ -199,23 +201,23 @@ cd shadowsocksr/shadowsocks
 
 ```bash
 python local.py -s <server_ip> \
-  -p <port> \
-  -k <keyphrase> \
-  -m <encryption> \
-  -o <obfus> \
-  -O <protocol> \
-  -l <local_port>
+    -p <port> \
+    -k <keyphrase> \
+    -m <encryption> \
+    -o <obfus> \
+    -O <protocol> \
+    -l <local_port>
 ```
 
 #### 2.1.4 Running via configuration file
 
-```
+```bash
 python local.py -c /etc/shadowsocks.json
 ```
 
 #### 2.1.5 Stop or restart the daemon
 
-```
+```bash
 python local.py -d stop/restart
 ```
 
@@ -223,18 +225,19 @@ python local.py -d stop/restart
 
 #### 2.2.1 Pull from Container Registry
 
-```
+```bash
 docker pull breakwa11/shadowsocksr:manyuser
 ```
 
 #### 2.2.2 Running in docker
 
-```
-docker run --name ssrlocal \
-  --restart always \
-  -p 1080:1080/tcp \
-  -v /path/to/config.json:/etc/shadowsocks.json \
-  -d breakwa11/shadowsocksr:manyuser python local.py -c /etc/shadowsocks.json
+```bash
+docker run -d \
+    --name ssrlocal \
+    --restart always \
+    -p 1080:1080/tcp \
+    -v /path/to/config.json:/etc/shadowsocks.json \
+    breakwa11/shadowsocksr:manyuser python local.py -c /etc/shadowsocks.json
 ```
 
 ### 2.3 Configuration
@@ -280,16 +283,17 @@ docker pull dreamacro/clash:v1.18.0
 #### 3.1.2 Run the container
 
 ```bash
-docker run --name clash \
-  --restart always \
-  -p 7890:7890 \
-  -p 7891:7891 \
-  -p 7892:7892 \
-  -p 9090:9090 \
-  -p 5353:5353/udp \
-  -p 5353:5353/tcp \
-  -v /path/to/config.yaml:/root/.config/clash/config.yaml \
-  -d dreamacro/clash:v1.18.0
+docker run -d \
+    --name clash \
+    --restart always \
+    -p 7890:7890 \
+    -p 7891:7891 \
+    -p 7892:7892 \
+    -p 9090:9090 \
+    -p 5353:5353/udp \
+    -p 5353:5353/tcp \
+    -v /path/to/config.yaml:/root/.config/clash/config.yaml \
+    dreamacro/clash:v1.18.0
 ```
 
 ### 3.2 Configuration
@@ -619,7 +623,7 @@ unzip v2ray-linux-64.zip
 
 #### 4.1.3 Enter subdirectory
 
-```
+```bash
 cd v2ray-linux-64
 ```
 
@@ -633,17 +637,18 @@ v2ray run -c /etc/v2ray/config.json
 
 #### 4.2.1 Pull from Container Registry
 
-```
+```bash
 docker pull v2fly/v2fly-core:v5.16.1
 ```
 
 #### 4.2.2 Run the container
 
-```
-docker run --name v2ray \
-  -p 10086:10086 \
-  -v /path/to/config.json:/etc/v2ray/config.json \
-  -d v2fly/v2fly-core:v5.16.1 run -c /etc/v2ray/config.json
+```bash
+docker run -d \
+    --name v2ray \
+    -p 10086:10086 \
+    -v /path/to/config.json:/etc/v2ray/config.json \
+    v2fly/v2fly-core:v5.16.1 run -c /etc/v2ray/config.json
 ```
 
 ### 4.3 Configuration

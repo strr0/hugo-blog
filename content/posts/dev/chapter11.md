@@ -23,7 +23,7 @@ Sa-Token 是一个轻量级 Java 权限认证框架，主要解决：登录认�
 新建 sso-server 模块
 
 引入依赖
-```
+```xml
 <!-- Sa-Token 权限认证, 在线文档：https://sa-token.cc/ -->
 <dependency>
     <groupId>cn.dev33</groupId>
@@ -39,7 +39,7 @@ Sa-Token 是一个轻量级 Java 权限认证框架，主要解决：登录认�
 </dependency>
 ```
 application 配置
-```
+```yml
 # 端口
 server:
     port: 9000
@@ -57,7 +57,7 @@ sa-token:
         secret-key: kQwIOrYvnXmSDkwEiFngrKidMcdrgKor
 ```
 新建 SsoServerController
-```
+```java
 /**
  * Sa-Token-SSO Server端 Controller 
  */
@@ -118,7 +118,7 @@ public class SsoServerController {
 新建 sso-client 模块（或使用已有的模块）
 
 引入依赖
-```
+```xml
 <!-- Sa-Token 权限认证, 在线文档：https://sa-token.cc/ -->
 <dependency>
     <groupId>cn.dev33</groupId>
@@ -134,7 +134,7 @@ public class SsoServerController {
 </dependency>
 ```
 application 配置
-```
+```yml
 # 端口
 server:
     port: 9001
@@ -157,7 +157,7 @@ sa-token:
         secret-key: kQwIOrYvnXmSDkwEiFngrKidMcdrgKor
 ```
 新建 SsoClientController
-```
+```java
 /**
  * Sa-Token-SSO Client端 Controller 
  */
@@ -204,13 +204,13 @@ public class SsoClientController {
 
 完成上述配置后，分别启动 sso-server 和 sso-client，然后访问 http://localhost:9001 进入客户端首页，点击登录即自动跳转到授权中心，授权中心登录成功后带 ticket 重定向回 /sso/login，此路径为客户端默认登录地址，在没有额外配置的情况下，他会默认对 ticket 进行校验并在校验成功后在客户端登录。  
 如果需要对客户端登录做自定义的逻辑操作，首先需要修改跳转到授权中心的 redirect 参数（即重定向地址），然后配置自定义 ticket 处理，如  
-```
-    // 根据ticket进行登录
-    @RequestMapping("/sso/doLoginByTicket")
-    public SaResult doLoginByTicket(String ticket) {
-        SaCheckTicketResult ctr = SaSsoClientProcessor.instance.checkTicket(ticket, "/sso/doLoginByTicket");
-        // 自定义登录逻辑
-        StpUtil.login(ctr.loginId, ctr.remainSessionTimeout);
-        return SaResult.data(StpUtil.getTokenValue());
-    }
+```java
+// 根据ticket进行登录
+@RequestMapping("/sso/doLoginByTicket")
+public SaResult doLoginByTicket(String ticket) {
+    SaCheckTicketResult ctr = SaSsoClientProcessor.instance.checkTicket(ticket, "/sso/doLoginByTicket");
+    // 自定义登录逻辑
+    StpUtil.login(ctr.loginId, ctr.remainSessionTimeout);
+    return SaResult.data(StpUtil.getTokenValue());
+}
 ```

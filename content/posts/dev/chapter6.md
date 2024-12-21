@@ -16,7 +16,7 @@ draft: false
 
 事件类继承 ApplicationEvent（非必须）
 
-```
+```java
 public class MyEvent extends ApplicationEvent {
     public MyEvent(Object source) {
         super(source);
@@ -28,7 +28,7 @@ public class MyEvent extends ApplicationEvent {
 
 #### 1.2.1 通过实现接口方式
 
-```
+```java
 public class MyListener implements ApplicationListener<MyEvent> {
     @Override
     public void onApplicationEvent(MyEvent event) {
@@ -39,7 +39,7 @@ public class MyListener implements ApplicationListener<MyEvent> {
 
 #### 1.2.2 通过注解方式
 
-```
+```java
 @Component
 public class MyListener {
     @EventListener
@@ -51,7 +51,7 @@ public class MyListener {
 
 ### 1.3 测试
 
-```
+```java
 @SpringBootTest
 public class ApplicationTests {
     @Autowired
@@ -77,7 +77,7 @@ public class ApplicationTests {
 ### 2.1 异步执行
 
 事件驱动默认是同步的，事件发布者会阻塞等待事件处理完成，可通过 Async 注解设置为异步执行
-```
+```java
 @Component
 public class MyListener {
     @Async

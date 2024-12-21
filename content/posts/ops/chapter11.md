@@ -34,27 +34,27 @@ PagePlug 低代码平台
 #### 1.3.1 后端启动
 
 进入后端目录
-```
+```bash
 cd app/server
 ```
 创建环境变量文件
-```
+```bash
 cp envs/dev.env.example .env
 ```
 修改环境变量
-```
-.env
+```sh
+# .env
 
 APPSMITH_MONGODB_URI="你的 Mongo 实例地址（可不配置副本集）"
 APPSMITH_REDIS_URL="你的 Redis 实例地址"
 ```
 构建 java 服务
-```
+```bash
 mvn clean compile
 bash ./build.sh -DskipTests
 ```
 启动 java 服务
-```
+```bash
 bash ./scripts/start-dev-server.sh
 ```
 
@@ -63,20 +63,20 @@ bash ./scripts/start-dev-server.sh
 #### 1.3.2 前端启动
 
 环境变量配置
-```
+```bash
 cp .env.example .env
 ```
 进入前端路径
-```
+```bash
 cd app/client
 ```
 代理配置（可使用 nginx 代替）
-```
+```bash
 yarn add http-proxy-middleware
 ```
 创建 setupProxy.js
-```
-src/setupProxy.js
+```js
+// src/setupProxy.js
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function (app) {
@@ -95,7 +95,7 @@ module.exports = function (app) {
 };
 ```
 启动前端服务
-```
+```bash
 yarn
 yarn start-win
 ```

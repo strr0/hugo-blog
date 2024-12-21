@@ -21,7 +21,7 @@ Maven 打包
 
 #### 1.1.1 添加打包插件
 
-```
+```xml
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -39,7 +39,7 @@ Maven 打包
 #### 1.1.2 运行打包命令
 
 运行打包命令，插件会自动识别启动类，并打包成一体包，直接启动即可
-```
+```bash
 mvn clean package -DskipTests
 ```
 
@@ -63,7 +63,7 @@ mvn clean package -DskipTests
 - includeScope - 包含指定 scope
 
 添加插件及设置如下配置
-```
+```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-dependency-plugin</artifactId>
@@ -96,7 +96,7 @@ mvn clean package -DskipTests
 - excludes - 忽略文件
 
 添加插件及设置如下配置
-```
+```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
@@ -127,7 +127,7 @@ mvn clean package -DskipTests
 - descriptor - 指定 assembly 配置文件路径
 
 添加插件及设置如下配置
-```
+```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-assembly-plugin</artifactId>
@@ -152,7 +152,7 @@ mvn clean package -DskipTests
 ```
 
 assembly 文件配置
-```
+```xml
 <assembly>
     <id>zip-desc</id>
     <!-- 打包类型，这里设置zip，则最终输出一个zip包 -->
@@ -189,7 +189,7 @@ assembly 文件配置
 #### 1.1.2 运行打包命令
 
 运行打包命令，插件会生成一个代码和依赖分离的 zip 包
-```
+```bash
 mvn clean package -DskipTests
 ```
 

@@ -19,7 +19,7 @@ java 环境（java 8 或 java 11）
 #### 1.2 下载 SeaTunnel
 
 下载并解压
-```
+```bash
 wget "https://archive.apache.org/dist/seatunnel/2.3.3/apache-seatunnel-2.3.3-bin.tar.gz"
 tar -xzvf "apache-seatunnel-2.3.3-bin.tar.gz"
 ```
@@ -27,15 +27,15 @@ tar -xzvf "apache-seatunnel-2.3.3-bin.tar.gz"
 #### 1.3 安装连接器插件
 
 配置所需要的插件，如 jdbc 插件
-```
-config/plugin_config
+```sh
+# config/plugin_config
 
 --seatunnel-connectors--
 connector-jdbc
 --end--
 ```
 执行命令安装插件
-```
+```bash
 sh bin/install-plugin.sh 2.3.3
 ```
 
@@ -49,8 +49,8 @@ sh bin/install-plugin.sh 2.3.3
 
 #### 2.2 作业配置（Demo）
 
-```
-config/v2.batch.config.template
+```sh
+# config/v2.batch.config.template
 
 env {
   execution.parallelism = 1
@@ -91,7 +91,7 @@ sink {
 #### 2.3 执行作业
 
 运行如下命令执行作业
-```
+```bash
 cd apache-seatunnel-2.3.3
 ./bin/seatunnel.sh --config ./config/v2.batch.config.template -e local
 ```
@@ -111,8 +111,8 @@ cd apache-seatunnel-2.3.3
 
 #### 3.3 作业配置
 
-```
-config/v2.batch.config
+```sh
+# config/v2.batch.config
 
 env {
   execution.parallelism = 10  # 并行数
@@ -149,7 +149,7 @@ sink {
 
 #### 3.4 执行作业
 
-```
+```bash
 ./bin/seatunnel.sh --config ./config/v2.batch.config -e local
 ```
 
@@ -175,15 +175,15 @@ sink {
 #### 4.2 下载与安装
 
 从 [https://seatunnel.apache.org/download](https://seatunnel.apache.org/download) 下载 seatunnel web，并解压
-```
+```bash
 tar -zxvf apache-seatunnel-web-1.0.0-SNAPSHOT.tar.gz
 ```
 
 #### 4.3 初始化数据库（MySQL）
 
 修改 seatunnel_server_env.sh 配置
-```
-script/seatunnel_server_env.sh
+```sh
+# script/seatunnel_server_env.sh
 
 export HOSTNAME="localhost"
 export PORT="3306"
@@ -191,15 +191,15 @@ export USERNAME="root"
 export PASSWORD="123456"
 ```
 运行命令初始化
-```
+```bash
 sh script/init_sql.sh
 ```
 
 #### 4.4 配置修改
 
 修改 application.yml 数据库连接配置
-```
-conf/application.yml
+```yml
+# conf/application.yml
 
 spring:
   datasource:
@@ -209,15 +209,15 @@ spring:
     password: password  # 根据实际情况修改
 ```
 复制 hazelcast-client.yaml 到 conf/
-```
+```bash
 cp $SEATUNNEL_HOME/config/hazelcast-client.yaml conf/
 ```
 复制 plugin-mapping.properties 到 conf/
-```
+```bash
 cp $SEATUNNEL_HOME/connectors/plugin-mapping.properties conf/
 ```
 启动 SeaTunnel-Web
-```
+```bash
 sh bin/seatunnel-backend-daemon.sh start
 ```
 访问 [http://127.0.0.1:8801/ui/](http://127.0.0.1:8801/ui/) 即可进入 web 端（admin/admin）
@@ -227,8 +227,8 @@ sh bin/seatunnel-backend-daemon.sh start
 #### 5.1 空指针问题
 
 checkpoint 超时导致，可增大 timeout 解决
-```
-config/seatunnel.yaml
+```yml
+# config/seatunnel.yaml
 
 seatunnel:
   engine:
@@ -243,10 +243,12 @@ seatunnel:
 
 #### 5.3 作业配置问题
 
-① source 参数和 sink 参数完全一致的情况下可以不使用 transform，sink 中的 insert 语句可以直接使用 ? 占位符  
-② 使用 transform 导致 ? 占位符匹配参数错位，可以使用 :param（参数名称）来指定参数  
+① source 参数和 sink 参数完全一致的情况下可以不使用 transform，sink 中的 insert 语句可以直接使用 ? 占位符
+
+② 使用 transform 导致 ? 占位符匹配参数错位，可以使用 :param（参数名称）来指定参数
+
 ③ 作业 sink 参数个数必须与 source 参数个数一致，否者作业会执行失败，可用 transform 过滤
-```
+```sh
 transform {
   FieldMapper {
     source_table_name = "fake"
@@ -263,44 +265,44 @@ transform {
 #### 5.4 java.net.BindException: 地址已在使用 (Bind failed)
 
 查看端口是否占用
-```
+```bash
 netstat -alnp | grep 8801
 ```
 如果端口被占用，执行命令杀死
-```
+```bash
 kill -9 103436（进程号）
 ```
 
 #### 5.5 Web 端 404 问题
 
 查看运行日志，可以看到 user does not exists
-```
+```bash
 tail -f nohup.out
 
 ...user does not exists
 ```
 尝试通过 nginx 跳转进入
-```
-nginx.conf
+```sh
+# nginx.conf
 
 ...
-    # SeaTunnel-Web
-    server {
-        listen 8808;
-        server_name localhost;
+# SeaTunnel-Web
+server {
+    listen 8808;
+    server_name localhost;
 
-        location / {
-            proxy_pass http://127.0.0.1:8801;
-        }
-
-        location /ui {
-            root /linewell/seatunnel/apache-seatunnel-web-1.0.0-SNAPSHOT;
-            index index.html index.htm;
-        }
+    location / {
+        proxy_pass http://127.0.0.1:8801;
     }
+
+    location /ui {
+        root /linewell/seatunnel/apache-seatunnel-web-1.0.0-SNAPSHOT;
+        index index.html index.htm;
+    }
+}
 
 ```
 重启 nginx
-```
+```bash
 /usr/local/nginx/sbin/nginx -s reload -c /usr/local/nginx/conf/nginx.conf
 ```

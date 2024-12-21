@@ -14,7 +14,7 @@ draft: false
 
 ### 1.1 可树化接口
 
-```
+```java
 /**
  * 可树化
  */
@@ -43,7 +43,7 @@ public interface Treeable<T, K> {
 
 ### 1.2 递归建树
 
-```
+```java
 public static <T extends Treeable<T, K>, K> List<T> build(List<T> list, K pid) {
     if (list == null || list.isEmpty()) {
         return null;
@@ -61,7 +61,7 @@ public static <T extends Treeable<T, K>, K> List<T> build(List<T> list, K pid) {
 
 ### 1.3 直接建树
 
-```
+```java
 public static <T extends Treeable<T, K>, K> List<T> build(List<T> list) {
     Map<K, T> itemMap = new HashMap<>();
     List<T> tree = new ArrayList<>();
@@ -87,7 +87,7 @@ public static <T extends Treeable<T, K>, K> List<T> build(List<T> list) {
 
 ### 2.1 实体类实现 Treeable 接口
 
-```
+```java
 public class SysResourceVo extends SysResource implements Treeable<SysResourceVo, Integer> {
     private List<SysResourceVo> children;
 
@@ -105,7 +105,7 @@ public class SysResourceVo extends SysResource implements Treeable<SysResourceVo
 
 ### 2.2 构建树结构
 
-```
+```java
 /**
   * 菜单树
   */

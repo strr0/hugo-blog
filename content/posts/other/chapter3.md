@@ -20,11 +20,11 @@ draft: false
 #### 1.1.1 下载 macOS
 
 命令行进入 OpenCorePkg，并进入镜像下载工具 macrecovery 目录
-```
+```bash
 cd ./Utilities/macrecovery
 ```
 下载需要安装的macOS版本
-```
+```bash
 # Lion (10.7):
 python3 macrecovery.py -b Mac-2E6FAB96566FE58C -m 00000000000F25Y00 download
 python3 macrecovery.py -b Mac-C3EC7CD22292981F -m 00000000000F0HM00 download

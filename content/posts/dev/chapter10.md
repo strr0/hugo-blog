@@ -13,14 +13,14 @@ Spring Batch 是一个轻量级的、完善的批处理框架,旨在帮助企业
 ### 1.1 Job 配置
 
 可以定义 JobListener 在 Job 执行期间监听 Job 的执行情况
-```
+```java
 public interface JobExecutionListener {
     void beforeJob(JobExecution jobExecution);
     void afterJob(JobExecution jobExecution);
 }
 ```
 Job 配置示例如下
-```
+```java
 public Job footballJob(JobRepository jobRepository) {
     return new JobBuilder("footballJob", jobRepository)
                      .listener(sampleListener())
@@ -32,7 +32,7 @@ public Job footballJob(JobRepository jobRepository) {
 ### 1.2 Step 配置
 
 可以定义 StepListener 在 Step 执行期间监听 Step 的执行情况
-```
+```java
 public interface StepExecutionListener extends StepListener {
     default void beforeStep(StepExecution stepExecution) {
     }
@@ -42,7 +42,7 @@ public interface StepExecutionListener extends StepListener {
 }
 ```
 Step 配置示例如下
-```
+```java
 // chunk 类型
 public Step sampleStep(JobRepository jobRepository, 
 		PlatformTransactionManager transactionManager) { 
@@ -63,7 +63,7 @@ public Step step(JobRepository jobRepository, PlatformTransactionManager transac
 
 ### 1.3 并行 Step 配置
 
-```
+```java
 public Job job(JobRepository jobRepository) {
     return new JobBuilder("job", jobRepository)
         .start(splitFlow())
@@ -100,7 +100,7 @@ public TaskExecutor taskExecutor() {
 
 ### 1.4 作业执行
 
-```
+```java
 @SpringBootTest
 public class JobLauncherTest {
 
@@ -122,7 +122,7 @@ public class JobLauncherTest {
 ### 2.1 项目配置
 
 引入依赖
-```
+```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-batch</artifactId>
@@ -161,7 +161,7 @@ public class JobLauncherTest {
 </dependency>
 ```
 application 配置
-```
+```yml
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
@@ -186,7 +186,7 @@ spring:
 ### 2.2 定义分区器
 
 用于将数据分成若干分区并行处理
-```
+```java
 public class JdbcRownumPartitioner implements DataPartitioner {
     private Long total = 0L;  // 数据总数
     private Long pageSize = 5000L;  // 分页大小
@@ -217,7 +217,7 @@ public class JdbcRownumPartitioner implements DataPartitioner {
 ### 2.3 定义读取器
 
 从指定的数据源按一定规则读取数据
-```
+```java
 public class JdbcPartitionReader extends AbstractItemCountingItemStreamItemReader<Map<String, Object>> {
     ...
     @Override
@@ -253,7 +253,7 @@ public class JdbcPartitionReader extends AbstractItemCountingItemStreamItemReade
 ### 2.4 定义数据处理器
 
 字段名称下划线转驼峰
-```
+```java
 public class CamelCaseProcessor implements DataItemProcessor<Map<String, Object>, Map<String, Object>> {
     @Override
     public Map<String, Object> process(Map<String, Object> item) throws Exception {
@@ -272,7 +272,7 @@ public class CamelCaseProcessor implements DataItemProcessor<Map<String, Object>
 ### 2.5 定义数据输出器
 
 按一定规则将数据输出到指定数据源
-```
+```java
 public class JdbcBatchWriter implements DataItemWriter<Map<String, Object>> {
     ...
     @Override
@@ -291,7 +291,7 @@ public class JdbcBatchWriter implements DataItemWriter<Map<String, Object>> {
 
 ### 2.6 作业主体配置
 
-```
+```java
 @Configuration
 public class JobPartitionConfig {
     @Autowired
@@ -346,7 +346,7 @@ public class JobPartitionConfig {
 
 ### 2.7 作业执行
 
-```
+```java
 @SpringBootTest
 public class ApplicationTests {
     @Autowired

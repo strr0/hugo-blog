@@ -35,7 +35,7 @@ Docker （导航到网站顶部的 Get Docker 链接以访问适合您平台的 
 #### 1.2.2 运行
 
 打开终端进入到下载目录，运行命令
-```
+```bash
 java -jar jenkins.war --httpPort=8080
 ```
 打开浏览器进入链接 [http://localhost:8080](http://localhost:8080) 按照说明完成安装
@@ -43,11 +43,11 @@ java -jar jenkins.war --httpPort=8080
 #### 1.2.3 配置国内镜像
 
 进入 jenkins 工作目录（如 /home/centos/.jenkins）
-```
+```bash
 cd /home/centos/.jenkins
 ```
 修改 hudson.model.UpdateCenter.xml
-```
+```xml
 <?xml version='1.1' encoding='UTF-8'?>
 <sites>
   <site>
@@ -57,25 +57,25 @@ cd /home/centos/.jenkins
 </sites>
 ```
 修改 updates/default.json，全文替换地址
-```
+```bash
 :%s/www.google.com/www.baidu.com/g
 :%s/https:\/\/updates.jenkins.io\/download/https:\/\/mirrors.tuna.tsinghua.edu.cn\/jenkins/g
 ```
 
 #### 1.2.4 重启
 
-```
+```bash
 nohup java -jar jenkins.war --httpPort=8080 > jenkins.log &
 ```
 
 ### 1.3 问题与修复
 
 无法访问 jenkins，检查端口是否开放
-```
+```bash
 firewall-cmd --list-ports
 ```
 如果端口未开放，运行如下命令开放
-```
+```bash
 firewall-cmd --permanent --zone=public --add-port=8080/tcp
 systemctl reload firewalld
 ```
@@ -122,7 +122,7 @@ Manage Jenkins > Credentials
 #### 2.2.4 配置后置脚本
 
 在 Post Steps 底下点击 Add post-build step 选择 Execute shell
-```
+```sh
 #!/bin/bash
 BUILD_ID=springboot-demo
 
@@ -147,7 +147,7 @@ nohup java -jar -Dspring.profiles.active=$PROFILES $JVM_OPTION $FILE_PATH >> $LO
 #### 2.2.5 配置后置脚本（docker）
 
 在 Post Steps 底下点击 Add post-build step 选择 Execute shell
-```
+```sh
 #!/bin/bash
 BUILD_ID=springboot-demo
 

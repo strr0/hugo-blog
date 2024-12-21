@@ -19,7 +19,7 @@ draft: false
 ### 2.1 Spring 配置
 
 添加 application 配置
-```
+```yml
 minio:
   url: http://localhost:9000
   accessKey: admin
@@ -80,7 +80,7 @@ public interface IOssService {
 ### 2.2 Minio 客户端
 
 添加依赖
-```
+```xml
 <dependency>
     <groupId>io.minio</groupId>
     <artifactId>minio</artifactId>
@@ -163,7 +163,7 @@ public class OssMinioServiceImpl implements IOssService {
 ### 2.3 Amazon 客户端
 
 添加依赖
-```
+```xml
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-java-sdk-s3</artifactId>

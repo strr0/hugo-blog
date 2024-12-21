@@ -51,30 +51,30 @@ wsl --set-default-version 2
 ## 2 基础操作
 
 查看 wsl 版本
-```
+```bash
 wsl -l -v
 ```
 设置 wsl 版本
-```
-wsl --set-version {所选的linux分支} 2
+```bash
+wsl --set-version <distribution> 2
 ```
 启动 wsl
-```
-wsl -d {所选的linux分支}
+```bash
+wsl -d <distribution>
 ```
 关闭 wsl
-```
+```bash
 wsl --shutdown
 ```
 导入 wsl
-```
-wsl --import {镜像名称} {安装路径} {镜像路径} --version 2 
+```bash
+wsl --import <image> <target_path> <image_path> --version 2 
 ```
 wsl 子系统安装列表
-```
+```bash
 wslconfig /l
 ```
 卸载子系统
-```
-wslconfig /u {所选的linux分支}
+```bash
+wslconfig /u <distribution>
 ```

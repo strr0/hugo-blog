@@ -16,7 +16,7 @@ MinIO 是一种高性能、S3 兼容的对象存储。
 
 #### 1.1.1 下载
 
-```
+```bash
 wget https://dl.minio.org.cn/server/minio/release/linux-amd64/minio
 chmod +x minio
 sudo mv minio /usr/local/bin/
@@ -24,7 +24,7 @@ sudo mv minio /usr/local/bin/
 
 #### 1.1.2 启动
 
-```
+```bash
 MINIO_ROOT_USER=admin MINIO_ROOT_PASSWORD=password minio server /data --address ":9000" --console-address ":9001"
 ```
 
@@ -32,22 +32,22 @@ MINIO_ROOT_USER=admin MINIO_ROOT_PASSWORD=password minio server /data --address 
 
 #### 1.2.1 拉取镜像
 
-```
+```bash
 docker pull minio/minio:RELEASE.2023-03-24T21-41-23Z
 ```
 
 #### 1.2.2 运行容器
-```
+```bash
 docker run -d \
-  --name minio-server \
-  -p 9000:9000 \
-  -p 9001:9001 \
-  -e MINIO_ROOT_USER=admin \
-  -e MINIO_ROOT_PASSWORD=password \
-  -v ./minio/data:/data \
-  -v ./minio/config:/root/.minio \
-  minio/minio:RELEASE.2023-03-24T21-41-23Z \
-  server --address ':9000' --console-address ':9001' /data
+    --name minio-server \
+    -p 9000:9000 \
+    -p 9001:9001 \
+    -e MINIO_ROOT_USER=admin \
+    -e MINIO_ROOT_PASSWORD=password \
+    -v ./minio/data:/data \
+    -v ./minio/config:/root/.minio \
+    minio/minio:RELEASE.2023-03-24T21-41-23Z \
+    server --address ':9000' --console-address ':9001' /data
 ```
 
 ## 2 使用
@@ -61,7 +61,7 @@ docker run -d \
 默认数据路径 /data
 
 备份数据到 backup
-```
+```bash
 mc cp --recursive /data/mybucket backup
 ```
 

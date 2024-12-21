@@ -48,7 +48,7 @@ sudo dockerd &
 ### 2.4 配置国内镜像源
 
 修改 /etc/docker/daemon.json
-```
+```json
 {
   "registry-mirrors": [
     "https://docker.m.daocloud.io",
@@ -57,7 +57,7 @@ sudo dockerd &
 }
 ```
 重启 docker
-```
+```sh
 PID=`ps -ef | grep dockerd | awk '{print $2}'`
 if [ ! -z "$PID" ]
 then
@@ -71,43 +71,48 @@ sudo dockerd &
 ### 3.1 基础操作
 
 查看镜像列表
-```
+```bash
 docker images
 ```
 查看容器列表
-```
+```bash
 docker ps -a
 ```
 拉取镜像
-```
+```bash
 docker pull <myimage>:<version>
 ```
 删除镜像
-```
+```bash
 docker rmi <myimage>
 ```
-运行容器（-p 端口映射 --name 容器名 -d 后台运行）
-```
-docker run -p 8080:8080 --name <mycontainer> -d <myimage>:<version>
+运行容器
+```bash
+docker run -dit \             # -d 后台运行 -i 交互形式 -t tty
+    --name <mycontainer> \    # --name 容器名
+    -p 8080:8080 \            # -p 端口映射
+    <myimage>:<version>
 ```
 修改容器默认命令
-```
-docker run <myimage> <mycommand>
+```bash
+docker run -d \
+    --name <mycontainer> \
+    <myimage>:<version> <mycommand>
 ```
 停止容器
-```
+```bash
 docker stop <mycontainer>
 ```
 删除容器
-```
+```bash
 docker rm <mycontainer>
 ```
 进入容器
-```
+```bash
 docker exec -it <mycontainer> /bin/bash
 ```
 查看日志
-```
+```bash
 docker logs -f --tail 100 <mycontainer>
 ```
 
@@ -116,26 +121,29 @@ docker logs -f --tail 100 <mycontainer>
 #### 3.2.1 操作
 
 查看网络列表
-```
+```bash
 docker network ls
 ```
 创建网络
-```
+```bash
 docker network create <mynetwork>
 ```
 删除网络
-```
+```bash
 docker network rm <mynetwork>
 ```
 
 #### 3.2.2 使用
 
 运行容器指定连接网络
-```
-docker run --name <mycontainer> --net <mynetwork> -d <myimage>:<version>
+```bash
+docker run -d \
+    --name <mycontainer> \
+    --net <mynetwork> \
+    <myimage>:<version>
 ```
 已有容器连接网络
-```
+```bash
 docker network connect <mynetwork> <mycontainer>
 ```
 > 连接至相同网络的容器可以通过 http://mycontainer:port 相互访问
@@ -143,49 +151,49 @@ docker network connect <mynetwork> <mycontainer>
 ### 3.3 文件磁盘
 
 复制容器文件
-```
+```bash
 docker cp <mycontainer>:/path/in/container /path/on/host
 ```
 磁盘空间查看
-```
+```bash
 docker system df
 ```
 磁盘空间清理
-```
+```bash
 docker system prune -a
 ```
 强制清理（需先停止 docker 服务）
-```
+```bash
 rm -rf /var/lib/docker
 ```
 
 ### 3.4 导入导出
 
 导出镜像
-```
+```bash
 docker save -o <myimage_version>.tar <myimage>:<version>
 ```
 导入镜像
-```
+```bash
 docker load -i <myimage_version>.tar
 ```
 导出容器
-```
+```bash
 docker export -o <mycontainer>.tar <mycontainer>
 ```
 导入容器
-```
+```bash
 docker import <mycontainer>.tar <myimage>:<version>
 ```
 
 ### 3.5 代理
 
 使用 dockerd 命令
-```
+```bash
 sudo dockerd --http-proxy=socks5://127.0.0.1:1080 --https-proxy=socks5://127.0.0.1:1080 &
 ```
 使用 daemon.json 配置
-```
+```json
 {
   "proxies": {
     "http-proxy": "http://proxy.example.com:3128",
@@ -198,15 +206,15 @@ sudo dockerd --http-proxy=socks5://127.0.0.1:1080 --https-proxy=socks5://127.0.0
 ### 3.6 其他操作
 
 获取容器 command
-```
+```bash
 docker inspect --format '{{.Config.Cmd}}' <mycontainer>
 ```
 修改镜像名称和 tag
-```
+```bash
 docker tag <oldname>:<oldtag> <newname>:<newtag>
 ```
 判断容器是否存在
-```
+```sh
 ID = `docker ps -a | grep <mycontainer> | awk '{print $1}'`
 if [ ! -z "$ID" ]
 then
@@ -214,7 +222,7 @@ then
 fi
 ```
 判断镜像是否存在
-```
+```sh
 ID = `docker images | grep <myimage> | awk '{print $3}'`
 if [ ! -z "$ID" ]
 then
@@ -225,7 +233,7 @@ fi
 ### 3.7 构建镜像
 
 #### 3.7.1 编写 Dockerfile
-```
+```Dockerfile
 FROM openjdk:17-jdk-alpine3.14
 
 RUN mkdir -p /app/lib \
@@ -248,14 +256,14 @@ ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${SERVER_P
 
 #### 3.7.2 构建
 
-```
+```bash
 docker build -t <myimage>:<version> <dockerfilepath>
 ```
 
 #### 3.7.3 运行与停止
 
 运行
-```
+```sh
 img="demo"
 
 version=$(date "+%Y-%m-%d")
@@ -273,7 +281,7 @@ docker run --name $img \
     -d $img:$version
 ```
 停止
-```
+```sh
 app="demo"
 
 appId=`docker ps -a | grep $app | awk '{print $1}'`
@@ -289,23 +297,23 @@ fi
 #### 3.8.1 安装
 
 下载及安装
-```
+```bash
 curl -SL https://github.com/docker/compose/releases/download/<version>/docker-compose-linux-<architecture> -o /usr/local/bin/docker-compose
 ```
 赋予权限
-```
+```bash
 chmod +x /usr/local/bin/docker-compose
 ```
 验证安装
-```
+```bash
 docker-compose --version
 ```
 
 #### 3.8.2 使用
 
 基本配置
-```
-docker-compose.yml
+```yml
+# docker-compose.yml
 
 version: '3'
 
@@ -338,7 +346,7 @@ services:
     network_mode: "host"
 ```
 运行指定配置
-```
+```bash
 docker-compose -f docker-compose.yml up -d
 ```
 
@@ -347,15 +355,15 @@ docker-compose -f docker-compose.yml up -d
 ### 4.1 普通用户 permission denied 问题
 
 创建 docker 组（若不存在）
-```
+```bash
 sudo groupadd docker
 ```
 将当前用户添加到 docker 组
-```
+```bash
 sudo usermod -aG docker $USER
 ```
 更新用户组
-```
+```bash
 newgrp docker
 ```
 
@@ -364,8 +372,8 @@ newgrp docker
 ### 4.2 开启远程访问
 
 修改 docker.service
-```
-/lib/systemd/system/docker.service
+```sh
+# /lib/systemd/system/docker.service
 
 # 注释如下
 # ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
@@ -373,6 +381,6 @@ newgrp docker
 ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 ```
 重启 docker
-```
+```bash
 systemctl daemon-reload & systemctl restart docker
 ```

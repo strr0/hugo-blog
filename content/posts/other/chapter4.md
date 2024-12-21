@@ -14,11 +14,11 @@ Hyprland 是一款基于 Wayland 的平铺式窗口管理器
 ### 1.1 安装 Hyprland
 
 安装依赖
-```
+```bash
 yay -S hyprland
 ```
 复制配置文件
-```
+```bash
 mkdir -pv ~/.config/hypr
 cp /usr/share/hyprland/hyprland.conf ~/.config/hypr
 ```
@@ -26,15 +26,15 @@ cp /usr/share/hyprland/hyprland.conf ~/.config/hypr
 ### 1.2 配置
 
 快捷键绑定
-```
+```sh
 bind = SUPER, T, exec, foot --override shell=fish
 ```
 设置环境变量
-```
+```sh
 env = XCURSOR_SIZE, 24
 ```
 启动
-```
+```sh
 exec-once = wl-paste --watch cliphist store
 ```
 
@@ -43,29 +43,29 @@ exec-once = wl-paste --watch cliphist store
 ### 2.1 终端
 
 ① kitty
-```
+```bash
 yay -S kitty
 ```
 
 ② fish
-```
+```bash
 yay -S fish
 ```
 
 ### 2.2 应用启动器
 
 ① wofi
-```
+```bash
 yay -S wofi
 ```
 
 ② rofi
-```
+```bash
 yay -S rofi
 ```
 
 ③ fuzzel
-```
+```bash
 yay -S fuzzel
 ```
 
@@ -74,12 +74,12 @@ yay -S fuzzel
 ① swaybg
 
 安装
-```
+```bash
 yay -S swaybg
 ```
 设置壁纸
-```
-~/.config/hypr/hyprland.conf
+```sh
+# ~/.config/hypr/hyprland.conf
 
 # 单壁纸
 $wallpaper_path=<你放壁纸的完整路径>
@@ -93,12 +93,12 @@ exec-once=swaybg -i $(find $wallpaper_dir -type f | shuf -n 1) -m fill
 ② hyprpaper
 
 安装
-```
+```bash
 yay -S hpyrpaper
 ```
 设置壁纸
-```
-~/.config/hypr/hyprpaper.conf
+```sh
+# ~/.config/hypr/hyprpaper.conf
 
 preload = /home/me/amongus.png
 wallpaper = monitor, /home/me/amongus.png
@@ -107,12 +107,12 @@ wallpaper = monitor, /home/me/amongus.png
 ### 2.4 状态栏
 
 安装
-```
+```bash
 yay -S waybar
 ```
 设置状态栏
-```
-~/.config/hypr/hyprland.conf
+```sh
+# ~/.config/hypr/hyprland.conf
 
 exec-once = waybar
 ```
@@ -120,28 +120,28 @@ exec-once = waybar
 ### 2.5 音频
 
 安装
-```
+```bash
 yay -S wireplumber
 ```
 启动
-```
+```bash
 systemctl --user start wireplumber
 ```
 获取设备状态
-```
+```bash
 wpctl status
 ```
 调节音频音量
-```
+```bash
 wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
 ```
 设置麦克风静音
-```
+```bash
 wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
 ```
 若未识别音频设备，尝试修改开启 alsa.use-ucm
-```
-~/.config/wireplumber/wireplumber.conf.d/alsa-vm.conf
+```sh
+# ~/.config/wireplumber/wireplumber.conf.d/alsa-vm.conf
 
 monitor.alsa.properties = {
   # Use ALSA-Card-Profile devices. They use UCM or the profile
@@ -156,35 +156,35 @@ monitor.alsa.properties = {
 ### 2.6 亮度
 
 安装
-```
+```bash
 yay -S light
 ```
 增加亮度
-```
+```bash
 light -A 5
 ```
 减少亮度
-```
+```bash
 light -U 5
 ```
 设置亮度
-```
+```bash
 light -S 100
 ```
 若无法调节亮度，尝试将用户加入组
-```
+```bash
 usermod -aG video <USERNAME>
 ```
 
 ### 2.7 输入法
 
 安装 fcitx5
-```
+```bash
 yay -S fcitx5 fcitx5-chinese-addons fcitx5-qt fcitx5-gtk
 ```
 修改配置
-```
-/etc/environment
+```sh
+# /etc/environment
 
 GTK_IM_MODULE=fcitx
 QT_IM_MODULE=fcitx
@@ -196,8 +196,8 @@ GLFW_IM_MODULE=ibus
 添加输入法（fcitx5-configtool）
 
 设置输入法
-```
-~/.config/hypr/hyprland.conf
+```sh
+# ~/.config/hypr/hyprland.conf
 
 exec-once=fcitx5 --replace -d
 ```
@@ -205,32 +205,32 @@ exec-once=fcitx5 --replace -d
 ### 2.8 文件管理
 
 ① dolphin
-```
+```bash
 yay -S dolphin
 ```
 
 ② nautilus
-```
+```bash
 yay -S nautilus
 ```
 
 ### 2.9 复制及截图
 
 安装复制工具
-```
+```bash
 yay -S cliphist wl-clipboard
 ```
 开启剪贴板监听
-```
+```bash
 exec-once = wl-paste --watch cliphist store
 ```
 安装截图工具
-```
+```bash
 yay -S slurp grim
 ```
 配置截图快捷键
-```
-~/.config/hypr/hyprland.conf
+```sh
+# ~/.config/hypr/hyprland.conf
 
 $screen_file=${HOME}/Pictures/ScreenShot/screen_shot_$(date +%Y%m%d%H%M%S).png
 bind = , Print, exec, grim $screen_file
@@ -241,12 +241,12 @@ bind = ALT, A, exec, grim -g "$(slurp)" - | wl-copy
 ### 2.10 锁屏
 
 安装
-```
+```bash
 yay -S hyprlock
 ```
 配置
-```
-~/.config/hypr/hyprlock.conf
+```sh
+# ~/.config/hypr/hyprlock.conf
 
 background {
     monitor =

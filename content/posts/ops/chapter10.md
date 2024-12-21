@@ -20,13 +20,13 @@ GitLab CI/CD 是 GitLab 提供持续集成服务，主要功能通过一个执�
 
 #### 1.2.1 添加官方源
 
-```
+```bash
 curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh" | sudo bash
 ```
 
 #### 1.2.2 安装最新版本
 
-```
+```bash
 yum install gitlab-runner
 ```
 
@@ -35,11 +35,11 @@ yum install gitlab-runner
 通过 /api/v4/version 查看 Gitlab 版本
 
 查看可用 runner 版本
-```
+```bash
 yum list gitlab-runner --showduplicates | sort -r
 ```
 安装
-```
+```bash
 yum install gitlab-runner-15.11.0-1
 ```
 
@@ -48,11 +48,11 @@ yum install gitlab-runner-15.11.0-1
 #### 1.3.1 交互模式
 
 运行命令注册
-```
+```bash
 gitlab-runner register
 ```
 如需代理，运行如下命令注册
-```
+```bash
 export HTTP_PROXY=http://yourproxyurl:3128
 export HTTPS_PROXY=http://yourproxyurl:3128
 
@@ -69,40 +69,40 @@ sudo -E gitlab-runner register
 #### 1.3.2 非交互模式
 
 Shell 类型执行器（推荐）
-```
+```bash
 gitlab-runner register \
-  --non-interactive \
-  --url "https://gitlab.com/" \
-  --registration-token "$PROJECT_REGISTRATION_TOKEN" \
-  --executor "shell" \
-  --shell "bash" \
-  --description "shell-executor-runner" \
-  --tag-list "shell" \
-  --run-untagged="true" \
-  --locked="false"
+    --non-interactive \
+    --url "https://gitlab.com/" \
+    --registration-token "$PROJECT_REGISTRATION_TOKEN" \
+    --executor "shell" \
+    --shell "bash" \
+    --description "shell-executor-runner" \
+    --tag-list "shell" \
+    --run-untagged="true" \
+    --locked="false"
 ```
 Docker 类型执行器（GitLab 15.10 及以上）
-```
+```bash
 gitlab-runner register \
-  --non-interactive \
-  --url "https://gitlab.com/" \
-  --token "$RUNNER_TOKEN" \
-  --executor "docker" \
-  --docker-image alpine:latest \
-  --description "docker-runner"
+    --non-interactive \
+    --url "https://gitlab.com/" \
+    --token "$RUNNER_TOKEN" \
+    --executor "docker" \
+    --docker-image alpine:latest \
+    --description "docker-runner"
 ```
 Docker 类型执行器（GitLab 15.10 以下）
-```
+```bash
 gitlab-runner register \
-  --non-interactive \
-  --url "https://gitlab.com/" \
-  --registration-token "$PROJECT_REGISTRATION_TOKEN" \
-  --executor "docker" \
-  --docker-image alpine:latest \
-  --description "docker-runner" \
-  --tag-list "docker,aws" \
-  --run-untagged="true" \
-  --locked="false"
+    --non-interactive \
+    --url "https://gitlab.com/" \
+    --registration-token "$PROJECT_REGISTRATION_TOKEN" \
+    --executor "docker" \
+    --docker-image alpine:latest \
+    --description "docker-runner" \
+    --tag-list "docker,aws" \
+    --run-untagged="true" \
+    --locked="false"
 ```
 注册成功后可在 Gitlab 项目的 Runner 页面看到可用的 runner
 
@@ -110,7 +110,7 @@ gitlab-runner register \
 
 ### 1.4 移除 Runner
 
-```
+```bash
 gitlab-runner unregister --name shell-executor-runner
 ```
 
@@ -123,7 +123,7 @@ gitlab-runner unregister --name shell-executor-runner
 ### 2.2 作业配置
 
 在项目根目录创建 .gitlab-ci.yml
-```
+```yml
 stages:
   - build
   - deploy
@@ -174,13 +174,13 @@ deploy-job:
 ### 3.1 mvn: 未找到命令
 
 mvn 路径权限问题，可以修改 mvn 权限为所有人可读
-```
+```bash
 chmod -R 755 $M2_HOME
 ```
 
 ### 3.2 docker 权限问题
 
-```
+```bash
 sudo gpasswd -a gitlab-runner docker
 newgrp docker
 ```

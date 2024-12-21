@@ -21,12 +21,12 @@ Mybatis 是一个基于 Java 的持久层框架，它的内部封装了 Jdbc，�
 #### 1.1.2 示例
 
 直接执行
-```
+```java
 SqlSession sqlSession = sqlSessionFactory.openSession();
 List<Xxx> xxxs = sqlSession.selectList("xxx.xxx");  // xxx.xxx 为 MappedStatement 的 id
 ```
 通过 mapper 执行
-```
+```java
 SqlSession sqlSession = sqlSessionFactory.openSession();
 XxxMapper xxxMapper = sqlSession.getMapper(XxxMapper.class);
 List<Xxx> xxxs = xxxMapper.selectList();
@@ -57,7 +57,7 @@ mybatis-spring-boot-starter 的核心是 MybatisAutoConfiguration 类，该类�
 #### 2.1.1 @Table 注解
 
 该注解用于定义表名
-```
+```java
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
@@ -68,7 +68,7 @@ public @interface Table {
 #### 2.1.2 @Column 注解
 
 该注解用于定义字段名以及是否模糊查询
-```
+```java
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
@@ -80,7 +80,7 @@ public @interface Column {
 #### 2.1.3 @Id 注解
 
 该注解用于标记表的主键字段
-```
+```java
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Id {
@@ -92,7 +92,7 @@ public @interface Id {
 #### 2.2.1 CrudSqlSource 类定义
 
 该类用于解析指定的类信息，并生成 SqlSource 对象，如
-```
+```java
 public SqlSource listByParamSqlSource() {
     SqlNode sqlNode = listSqlNode();
     return new DynamicSqlSource(configuration, new MixedSqlNode(Arrays.asList(sqlNode, applyWhere)));
@@ -110,7 +110,7 @@ private SqlNode listSqlNode() {
 #### 2.2.2 CrudMappedStatement 类定义
 
 该类用于为指定的 mapper 类生成自定义 MappedStatement 并添加到 Mybatis 配置中，如
-```
+```java
 public void addListByParamStatement() {
     SqlSource listByParam = crudSqlSource.listByParamSqlSource();
     MappedStatement.Builder mappedStatementBuilder = new MappedStatement.Builder(
@@ -129,7 +129,7 @@ public void addListByParamStatement() {
 该类为本次工作的核心，它的作用是对扫描到的 mapper 对象的处理，结合 Mybatis 自带的扫描注解 @MapperScan 完美实现对 mapper 对象添加自定义方法。
 
 CrudMapperFactoryBean.java
-```
+```java
 public class CrudMapperFactoryBean<T> extends MapperFactoryBean<T> {
     public CrudMapperFactoryBean() {
         super();
@@ -149,7 +149,7 @@ public class CrudMapperFactoryBean<T> extends MapperFactoryBean<T> {
 }
 ```
 MybatisConfig.java
-```
+```java
 @AutoConfiguration
 @MapperScan(basePackages = { "${mybatis.crud-mapper-package}" }, factoryBean = CrudMapperFactoryBean.class)
 public class MybatisConfig {
@@ -162,7 +162,7 @@ public class MybatisConfig {
 #### 2.3.1 CrudMapper 类
 
 该类与生成的 mybatis 方法（MappedStatement）一一对应
-```
+```java
 public interface CrudMapper<T, ID extends Serializable> {
     int countByParam(T param);
     List<T> listByParam(T param);
@@ -176,7 +176,7 @@ public interface CrudMapper<T, ID extends Serializable> {
 #### 2.3.2 CrudService 类和 CrudServiceImpl 类
 
 CrudService.java
-```
+```java
 public interface CrudService<T, ID extends Serializable> {
     int save(T entity);
     int update(T entity);
@@ -185,7 +185,7 @@ public interface CrudService<T, ID extends Serializable> {
 }
 ```
 CrudServiceImpl.java
-```
+```java
 public abstract class CrudServiceImpl<T, ID extends Serializable> implements CrudService<T, ID> {
     protected abstract CrudMapper<T, ID> getMapper();
 
@@ -213,7 +213,7 @@ public abstract class CrudServiceImpl<T, ID extends Serializable> implements Cru
 
 #### 2.3.3 CrudController 类
 
-```
+```java
 public abstract class CrudController<T, ID extends Serializable> {
     protected abstract CrudService<T, ID> getService();
 
@@ -262,7 +262,7 @@ public abstract class CrudController<T, ID extends Serializable> {
 #### 3.1.1 分页类定义
 
 Pageable.java
-```
+```java
 public class Pageable {
     private Integer page = 1;
     private Integer size = 10;
@@ -285,7 +285,7 @@ public class Pageable {
 }
 ```
 Page.java
-```
+```java
 public class Page<T> extends Pageable {
     private Integer total;
     private List<T> content;
@@ -320,7 +320,7 @@ public class Page<T> extends Pageable {
 #### 3.1.2 分页插件定义
 
 该插件通过拦截 Executor 的 query 方法，如果 mapper 方法带有 Pageable 参数，则执行分页查询
-```
+```java
 @Component
 @Intercepts({@Signature(
         type = Executor.class,
@@ -362,7 +362,7 @@ public class PageInterceptor implements Interceptor {
 
 #### 3.1.3 使用
 
-```
+```java
 public interface CrudMapper<T, ID extends Serializable> {
     ...
 
@@ -376,7 +376,7 @@ public interface CrudMapper<T, ID extends Serializable> {
 Mybatis 基础的 CRUD 方法封装完成之后，我发现还有一点瑕疵，因为我只生成了方法，但是对结果集的处理并不会按照我所定义的注解来映射字段，于是我打算再定义一个 ResultSetHandler 的插件来处理结果集，但是后来发现这并不是一个明智的方法，因为在 ResultSetHandler 中实际对结果集字段映射的代码只占据整个代码的一小部分，而我需要对整个 ResultSetHandler 重写才能实现这个功能。在多次阅读代码后发现字段映射的核心代码在于 MetaObject 的 findProperty 方法，该方法往上最终调用 Reflector 的 findPropertyName 方法，于是只需自定义 Reflector 的处理逻辑，并将 ReflectorFactory 添加到 Mybatis 配置中即可
 
 AnnotationReflector.java
-```
+```java
 public class AnnotationReflector extends Reflector {
     private final Map<String, String> annotationPropertyMap = new HashMap<>();
 
@@ -403,7 +403,7 @@ public class AnnotationReflector extends Reflector {
 }
 ```
 AnnotationReflectorFactory.java
-```
+```java
 public class AnnotationReflectorFactory implements ReflectorFactory {
     private boolean classCacheEnabled = true;
     private final ConcurrentMap<Class<?>, Reflector> reflectorMap = new ConcurrentHashMap<>();
@@ -425,7 +425,7 @@ public class AnnotationReflectorFactory implements ReflectorFactory {
 }
 ```
 MybatisConfig.java
-```
+```java
 @AutoConfiguration
 @MapperScan(basePackages = { "${mybatis.crud-mapper-package}" }, factoryBean = CrudMapperFactoryBean.class)
 public class MybatisConfig {

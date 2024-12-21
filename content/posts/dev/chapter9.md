@@ -27,14 +27,14 @@ draft: false
 ### 2.1 Spring Cloud 配置中心
 
 引入依赖
-```
+```xml
 <dependency>
     <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
 </dependency>
 ```
 application 配置
-```
+```yml
 spring:
   application:
     # 应用名称
@@ -60,14 +60,14 @@ spring:
 #### 2.2.1 服务提供方配置
 
 引入依赖
-```
+```xml
 <dependency>
     <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 </dependency>
 ```
 application 配置
-```
+```yml
 spring:
   application:
     # 应用名称
@@ -85,7 +85,7 @@ spring:
         namespace: ${spring.profiles.active}
 ```
 定义服务接口
-```
+```java
 @RestController
 public class HelloController {
     @GetMapping("/hello")
@@ -98,7 +98,7 @@ public class HelloController {
 #### 2.2.2 服务消费者配置
 
 引入依赖
-```
+```xml
 <dependency>
     <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
@@ -110,7 +110,7 @@ public class HelloController {
 </dependency>
 ```
 application 配置
-```
+```yml
 spring:
   application:
     # 应用名称
@@ -128,7 +128,7 @@ spring:
         namespace: ${spring.profiles.active}
 ```
 RestTemplate 配置
-```
+```java
 @Configuration
 @EnableDiscoveryClient
 public class RestTemplateConfig {
@@ -140,7 +140,7 @@ public class RestTemplateConfig {
 }
 ```
 定义服务客户端
-```
+```java
 @Component
 public class ProviderClient {
     private final RestTemplate restTemplate;
@@ -163,7 +163,7 @@ public class ProviderClient {
 #### 2.3.1 定义基础服务
 
 创建 dubbo 公共服务模块，并定义服务接口
-```
+```java
 public interface HelloService {
     String hello();
 }
@@ -172,7 +172,7 @@ public interface HelloService {
 #### 2.3.2 服务提供方配置
 
 引入依赖
-```
+```xml
 <dependency>
     <groupId>org.apache.dubbo</groupId>
     <artifactId>dubbo-spring-boot-starter</artifactId>
@@ -180,7 +180,7 @@ public interface HelloService {
 </dependency>
 ```
 application 配置
-```
+```yml
 spring:
   application:
     # 应用名称
@@ -219,7 +219,7 @@ dubbo:
     base-packages: com.strr.provider.dubbo
 ```
 定义 Dubbo 服务
-```
+```java
 @DubboService
 public class HelloServiceImpl implements HelloService {
     @Override
@@ -232,7 +232,7 @@ public class HelloServiceImpl implements HelloService {
 #### 2.3.3 服务消费者配置
 
 引入依赖
-```
+```xml
 <dependency>
     <groupId>org.apache.dubbo</groupId>
     <artifactId>dubbo-spring-boot-starter</artifactId>
@@ -240,7 +240,7 @@ public class HelloServiceImpl implements HelloService {
 </dependency>
 ```
 application 配置
-```
+```yml
 spring:
   application:
     # 应用名称
@@ -289,7 +289,7 @@ dubbo:
     timeout: 3000
 ```
 定义服务消费者
-```
+```java
 @RestController
 public class HelloController {
     private static final Logger logger = LoggerFactory.getLogger(HelloController.class);

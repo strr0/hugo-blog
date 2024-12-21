@@ -19,7 +19,7 @@ draft: false
 ### Spring 配置
 
 引入依赖
-```
+```xml
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-mongodb</artifactId>
@@ -33,7 +33,7 @@ draft: false
 </dependency>
 ```
 application 配置
-```
+```yml
 spring:
   data:
     mongodb:
@@ -45,14 +45,14 @@ spring:
       password: password
 ```
 repository 配置
-```
+```java
 public interface BookRepository extends MongoRepository<Book, Integer> {
 }
 ```
 
 ### 测试
 
-```
+```java
 @SpringBootTest
 class ApplicationTests {
     @Autowired

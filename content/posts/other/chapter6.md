@@ -36,11 +36,11 @@ Halium 是一个合作项目，是一个致力于统一硬件抽象层项目，�
 ##### 1.2.1.1 更新软件包
 
 如果使用的是 amd64 架构，需要开启使用 i386 架构
-```
+```bash
 sudo dpkg --add-architecture i386
 ```
 更新软件包
-```
+```bash
 sudo apt update
 ```
 ***
@@ -48,7 +48,7 @@ sudo apt update
 Debian (Stretch or newer) / Ubuntu (16.04 or 18.04)
 
 下载所需依赖
-```
+```bash
 sudo apt install git gnupg flex bison gperf build-essential \
   zip bzr curl libc6-dev libncurses5-dev:i386 x11proto-core-dev \
   libx11-dev:i386 libreadline6-dev:i386 libgl1-mesa-glx:i386 \
@@ -61,7 +61,7 @@ sudo apt install git gnupg flex bison gperf build-essential \
 Ubuntu (20.04 or newer)
 
 下载所需依赖
-```
+```bash
 sudo apt install git gnupg flex bison gperf build-essential \
   zip bzr curl libc6-dev libncurses5-dev:i386 x11proto-core-dev \
   libx11-dev:i386 libreadline6-dev:i386 libgl1-mesa-glx:i386 \
@@ -74,7 +74,7 @@ sudo apt install git gnupg flex bison gperf build-essential \
 ##### 1.2.1.4 git repo
 
 在 home 目录下创建 bin 目录，并添加到 PATH 环境变量
-```
+```bash
 mkdir -p ~/bin
 echo export PATH=\$PATH:\$HOME/bin >> ~/.bashrc
 source ~/.bashrc
@@ -82,19 +82,19 @@ source ~/.bashrc
 ***
 
 下载 git repo 脚本（google）
-```
+```bash
 curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 chmod a+rx ~/bin/repo
 ```
 ***
 
 下载 git repo 脚本（中科大源）
-```
+```bash
 curl -sSL  'https://gerrit-googlesource.proxy.ustclug.org/git-repo/+/master/repo?format=TEXT' |base64 -d > ~/bin/repo
 chmod a+x ~/bin/repo
 ```
 更新 REPO_URL
-```
+```bash
 echo export REPO_URL='https://gerrit-googlesource.proxy.ustclug.org/git-repo' >> ~/.bashrc
 source ~/.bashrc
 ```
@@ -104,11 +104,11 @@ source ~/.bashrc
 如果使用的是 amd64 架构，需要在 /etc/pacman.conf 中添加 multilib 源，以便使用 i686 的包。
 
 获取依赖代码
-```
+```bash
 git clone https://aur.archlinux.org/halium-devel.git
 ```
 编译及安装
-```
+```bash
 cd halium-devel && makepkg -i
 ```
 
@@ -117,32 +117,32 @@ cd halium-devel && makepkg -i
 ### 2.1 获取源码
 
 设置 git 用户名及邮箱
-```
+```bash
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
 ```
 创建源码路径
-```
+```bash
 mkdir halium && cd halium
 ```
 获取源码（以 halium-7.1 为例）
-```
+```bash
 repo init -u https://github.com/Halium/android -b halium-7.1 --depth=1
 ```
 ***
 
 同步源码树（google）
-```
+```bash
 repo sync -c -j 16
 ```
 ***
 
 替换源码 remote
-```
+```bash
 git config --global url.https://mirrors.ustc.edu.cn/aosp/.insteadof https://android.googlesource.com
 ```
 同步源码树（中科大源，sync 默认使用 4 个并发连接，请勿使用 -j 参数增加并发连接数）
-```
+```bash
 repo sync -c
 ```
 
@@ -154,8 +154,8 @@ repo sync -c
 
 #### 2.2.2 创建文件
 
-创建文件 halium/devices/manifests/[manufacturer]_[device].xml
-```
+创建文件 `halium/devices/manifests/<manufacturer>_<device>.xml`
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
 </manifest>
@@ -164,15 +164,15 @@ repo sync -c
 #### 2.2.3 添加设备信息
 
 在 manifest 标签中添加如下配置
-```
-<project path="device/[manufacturer] / [device]" name="[repository name]" remote="[remote]" revision="[revision]" />
+```xml
+<project path="device/<manufacturer>/<device>" name="<repository name>" remote="<remote>" revision="<revision>" />
 ```
 
 #### 2.2.4 添加依赖信息
 
 根据 cm.dependencies 或 lineage.dependencies 填充配置
-```
-<project path="[target_path]" name="[repository]" remote="[remote]" revision="[revision]" />
+```xml
+<project path="<target_path>" name="<repository>" remote="<remote>" revision="<revision>" />
 ```
 
 #### 2.2.5 添加 Vendor
@@ -182,7 +182,7 @@ repo sync -c
 #### 2.2.6 添加 remote
 
 如需添加 remote，可以在 .repo/manifest.xml 下添加
-```
+```xml
 <remote name="mun"
     fetch="https://github.com/MyUserName"
     revision="cm-14.1" />
@@ -212,8 +212,8 @@ halium-5.1 默认 remote
 #### 2.2.7 获取相关源码
 
 manifest 填充完毕后，执行命令（DEVICE 替换成设备型号）
-```
-./halium/devices/setup DEVICE
+```bash
+./halium/devices/setup <DEVICE>
 ```
 
 ### 2.3 构建源码
@@ -221,7 +221,7 @@ manifest 填充完毕后，执行命令（DEVICE 替换成设备型号）
 #### 2.3.1 初始化
 
 初始化环境变量
-```
+```bash
 source build/envsetup.sh
 ```
 成功则返回如下信息
@@ -238,7 +238,7 @@ including vendor/cm/bash_completion/repo.bash
 Halium-5.1
 
 执行命令
-```
+```bash
 lunch
 ```
 得到如下信息
@@ -247,24 +247,24 @@ lunch
 2. aosp_arm-eng     5. aosp_x86_64-eng   8. cm_bacon-user
 3. aosp_mips64-eng  6. aosp_x86-eng      9. cm_bacon-userdebug
 ```
-选择设备 cm_[your device]-userdebug
+选择设备 `cm_<your device>-userdebug`
 ***
 
 Halium-7.1
 
 执行命令
-```
-breakfast [codename]
+```bash
+breakfast <codename>
 ```
 
 #### 2.3.3 修改内核配置
 
 内核配置路径（路径一般在 arch/arm/configs/<CONFIG> 或 arch/arm64/configs/<CONFIG> 下）
-```
+```bash
 grep "TARGET_KERNEL_CONFIG" device/<VENDOR>/<CODENAME>/BoardConfig.mk
 ```
 检查配置及修复
-```
+```bash
 ./halium/halium-boot/check-kernel-config path/to/my/defconfig -w
 ```
 
@@ -274,12 +274,12 @@ grep "TARGET_KERNEL_CONFIG" device/<VENDOR>/<CODENAME>/BoardConfig.mk
 
 #### 2.3.4 Ubuntu Touch 配置
 
-在 BoardConfig.mk 配置中添加（~/halium/device/<vendor>/<model_codename>/BoardConfig.mk）
-```
+在 BoardConfig.mk 配置中添加（`~/halium/device/<vendor>/<model_codename>/BoardConfig.mk`）
+```sh
 BOARD_KERNEL_CMDLINE += console=tty0
 ```
 如果在 boot 之后不能 ssh 连接，尝试修改内核配置
-```
+```sh
 CONFIG_CMDLINE="console=tty0"
 CONFIG_CMDLINE_EXTEND=y
 ```
@@ -293,10 +293,10 @@ CONFIG_CMDLINE_EXTEND=y
 2 使用 adb shell 进入并获取 root 权限
 
 3 创建配置
-```
-"[codename]")
+```sh
+"<codename>")
     sed -i \
-        [replacements, one per line]
+        <replacements, one per line>
         "$@"
     ;;
 ```
@@ -304,24 +304,24 @@ CONFIG_CMDLINE_EXTEND=y
 4 对于所有非 auto emmc swap 的条目，执行 readlink -f [src] 获取返回值
 
 5 用 4 中的到的结果替换 3 中的每一行
-```
-  -e 's [src] [return] ' \
+```sh
+  -e 's <src> <return> ' \
 ```
 
 #### 2.3.6 添加 Hybris 补丁（halium 9 以上）
 
-```
+```bash
 hybris-patches/apply-patches.sh --mb
 ```
 
 #### 2.3.7 构建镜像
 
 生成构建工具
-```
+```bash
 mka mkbootimg
 ```
 构建镜像
-```
+```bash
 export USE_HOST_LEX=yes
 mka halium-boot
 mka systemimage

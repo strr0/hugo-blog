@@ -22,31 +22,31 @@ Linux 手机发行版
 ### 2.1 安装构建工具
 
 更新 python 版本
-```
+```bash
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt-get update
 sudo apt-get install python3.12
 ```
 修改 link
-```
+```bash
 cd /usr/bin
 mv python3 python3.bak
 ln -s python3.12 python3
 ```
 设置环境变量
-```
+```bash
 echo export PATH=\$PATH:\$HOME/.local/bin >> ~/.bashrc
 source ~/.bashrc
 ```
 安装
-```
+```bash
 git clone https://gitlab.postmarketos.org/postmarketOS/pmbootstrap.git
 cd pmbootstrap
 mkdir -p ~/.local/bin
 ln -s "$PWD/pmbootstrap.py" ~/.local/bin/pmbootstrap
 ```
 验证
-```
+```bash
 pmbootstrap --version
 ```
 
@@ -64,11 +64,11 @@ pmbootstrap --version
 - 时区
 
 初始化环境配置
-```
+```bash
 pmbootstrap init
 ```
 配置镜像
-```
+```bash
 pmbootstrap config mirrors.alpine https://mirrors.tuna.tsinghua.edu.cn/alpine/
 pmbootstrap config mirrors.pmaports https://mirrors.tuna.tsinghua.edu.cn/postmarketOS/
 ```
@@ -78,25 +78,25 @@ pmbootstrap config mirrors.pmaports https://mirrors.tuna.tsinghua.edu.cn/postmar
 #### 2.3.1 生成常规镜像
 
 运行命令
-```
+```bash
 pmbootstrap install
 ```
 
 #### 2.3.2 生成并刷入
 
 使用 lsblk 找到设备路径，SD 卡通常在 /dev/mmcblk，可以通过如下命令获取
-```
+```bash
 sudo fdisk -l /dev/[yourdevice]
 ```
 运行命令（/dev/mmcblk... 替换为实际获取的路径）
-```
+```bash
 pmbootstrap install --disk=/dev/mmcblk...
 ```
 
 #### 2.3.3 开启磁盘加密
 
 运行命令
-```
+```bash
 pmbootstrap install --fde
 ```
 
@@ -105,10 +105,10 @@ pmbootstrap install --fde
 将设备启动到 fastboot 模式
 
 刷入 rootfs
-```
+```bash
 pmbootstrap flasher flash_rootfs
 ```
 刷入 kernel
-```
+```bash
 pmbootstrap flasher flash_kernel
 ```

@@ -15,7 +15,7 @@ Apache ShardingSphere 是一款分布式 SQL 事务和查询引擎，可通过�
 ### 2.1 基础配置和使用
 
 创建 maven 项目，并引入依赖
-```
+```xml
 <dependency>
     <groupId>org.apache.shardingsphere</groupId>
     <artifactId>shardingsphere-jdbc-core</artifactId>

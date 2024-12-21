@@ -19,7 +19,7 @@ draft: false
 ### Spring 配置
 
 引入依赖
-```
+```xml
 <dependency>
     <groupId>org.springframework.kafka</groupId>
     <artifactId>spring-kafka</artifactId>
@@ -34,7 +34,7 @@ draft: false
 </dependency>
 ```
 application 配置
-```
+```yml
 spring:
   kafka:
     bootstrap-servers: localhost:9092
@@ -44,7 +44,7 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
 ```
 Topic 和消息转换器配置
-```
+```java
 @Configuration
 @EnableKafka
 public class KafkaConfig {
@@ -61,7 +61,7 @@ public class KafkaConfig {
 }
 ```
 生产者配置
-```
+```java
 @Service
 public class KafkaProducerService {
     @Autowired
@@ -74,7 +74,7 @@ public class KafkaProducerService {
 }
 ```
 消费者配置
-```
+```java
 @Service
 public class KafkaConsumerService {
     // 接收消息
@@ -87,7 +87,7 @@ public class KafkaConsumerService {
 
 ### 测试
 
-```
+```java
 @SpringBootTest
 class ApplicationTests {
     @Autowired
